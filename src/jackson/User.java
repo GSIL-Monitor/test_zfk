@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class User {
 	private String name;
 	private Integer age;
+	// @JsonSerialize(using = JsonDateFormatFull.class)
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 	private String email;
 	private List<User> friends = new ArrayList<User>();
-	
+
 	public String getName() {
 		return name;
 	}
@@ -43,7 +48,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public List<User> getFriends() {
 		return friends;
 	}
@@ -57,7 +62,5 @@ public class User {
 		return "User [name=" + name + ", age=" + age + ", birthday=" + birthday + ", email=" + email + ", friends="
 				+ friends + "]";
 	}
-
-	
 
 }

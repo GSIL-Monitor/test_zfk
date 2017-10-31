@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 
 
 
@@ -18,19 +20,19 @@ public class JacksonDemo {
 		user.setEmail("xiaolong@sina.com");
 		user.setAge(20);
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-		user.setBirthday(dateformat.parse("1991-07-01"));		
+		user.setBirthday(dateformat.parse("1991-07-12"));		
 		
 		User user2 = new User();
 		user2.setName("小强");	
 		user2.setEmail("xiaoQ@sina.com");
 		user2.setAge(20);
-		user.setBirthday(dateformat.parse("1991-04-01"));		
+		user2.setBirthday(dateformat.parse("1991-04-01"));		
 		
 		User user3 = new User();
 		user3.setName("小明");	
 		user3.setEmail("xiaomin@sina.com");
 		user3.setAge(20);
-		user.setBirthday(dateformat.parse("1992-10-01"));		
+		user3.setBirthday(dateformat.parse("1992-10-01"));		
 		
 		List<User> users = new ArrayList<User>();
 		users.add(user2);
@@ -57,12 +59,12 @@ public class JacksonDemo {
 		System.out.println(jsonlist);
 		
 		
-		String jsonStr = "{\"name\":\"小民\",\"age\":20,\"birthday\":844099200000,\"email\":\"xiaomin@sina.com\",\"friends\":[{\"name\":\"小强\",\"age\":20,\"birthday\":null,\"email\":\"xiaoQ@sina.com\",\"friends\":[]},{\"name\":\"小明\",\"age\":20,\"birthday\":null,\"email\":\"xiaomin@sina.com\",\"friends\":[]}]}";  
+		String jsonStr = "{\"name\":\"小民\",\"age\":20,\"birthday\":\"1991-07-12\",\"email\":\"xiaomin@sina.com\",\"friends\":[{\"name\":\"小强\",\"age\":20,\"birthday\":null,\"email\":\"xiaoQ@sina.com\",\"friends\":[]},{\"name\":\"小明\",\"age\":20,\"birthday\":null,\"email\":\"xiaomin@sina.com\",\"friends\":[]}]}";  
         /** 
          * ObjectMapper支持从byte[]、File、InputStream、字符串等数据的JSON反序列化。 
          */  
 		
         User user0 = mapper.readValue(jsonStr, User.class);  
-        System.out.println(user0);  
+        System.out.println(user0);
 	}
 }
