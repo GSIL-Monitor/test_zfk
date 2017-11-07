@@ -25,18 +25,36 @@ public class Test {
 		sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 		SqlSession session = sqlSessionFactory.openSession();
 		System.out.println(session);
-		list();
+		//list();
 		// get();
-		// insertUser();
-		// updateUser();
-		// deleteUser();
+		insert();
+		// update();
+		// delete();
 
-		// listAllBook();
-		// getBookById();
-		// getBookByUserId();
-		// insertBook();
-		// updateBook();
-		// deleteBook();
+	}
+
+	private static void insert() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"messageTitle\":\"月租宝\",");
+		sb.append("\"beginTime\": \"2017-10-23 09:09:09\",");
+		sb.append("\"endTime\": \"2017-10-29 09:09:09\",");
+		sb.append("\"publishStatus\": \"0\",");
+		sb.append("\"messageContent\": \"月租宝是XXXX\",");
+		sb.append("\"actionScopes\":[{");
+		sb.append("\"scopeType\":\"1\",");
+		sb.append("\"scopeId\":\"robotId1111\",");
+		sb.append("\"scopeName\":\"小龙人一号\"");
+		sb.append("},");
+		sb.append("{");
+		sb.append("\"scopeType\":\"2\",");
+		sb.append("\"scopeId\":\"robotTypeId1111\",");
+		sb.append("\"scopeName\":\"小龙人类型\"");
+		sb.append("}],");
+		sb.append("\"subsystemId\": \"subsystemId1111\",");
+		sb.append("\"modifiedBy\": \"userid\"");
+		sb.append("}");
+		
 	}
 
 	private static void get() throws JsonProcessingException {
@@ -67,7 +85,7 @@ public class Test {
 
 		System.out.println("###############");
 		ObjectMapper mapper = new ObjectMapper();
-		// User类转JSON//
+		// //User类转JSON
 		String json = mapper.writeValueAsString(list);
 		System.out.println(json);
 
