@@ -85,7 +85,9 @@ public class Test {
 
 		System.out.println("###############");
 		ObjectMapper mapper = new ObjectMapper();
+
 		// ////User类转JSON
+		// //User类转JSON//
 		String json = mapper.writeValueAsString(list);
 		System.out.println(json);
 
