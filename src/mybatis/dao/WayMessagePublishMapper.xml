@@ -95,13 +95,12 @@
 		<if test="key != null">
 			<!-- searchContents.messageTitle -->
 			where a.message_title like '%${key}%'
-<!-- 			where a.message_title like CONCAT(CONCAT('%',#{key}), '%') -->
+			<!-- where a.message_title like CONCAT(CONCAT('%',#{key}), '%') -->
 		</if>
 		order by modified_time desc limit #{offset}, #{limit}
 	</select>
-	
-	<select id="listByPage" resultMap="BaseResultMap"
-		parameterType="mybatis.dto.PageSearchDTO">
+
+	<select id="listByPage" resultMap="BaseResultMap" parameterType="mybatis.dto.PageSearchDTO">
 		select
 		<include refid="Base_Column_List" />
 		from way_message_publish
@@ -323,5 +322,50 @@
 		#{messageContent,jdbcType=LONGVARCHAR}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
+
+	<resultMap id="ActionScopeMap"
+		type="mybatis.dto.WayRobotActionScopeDTO">
+		<result column="type" property="scopeType" jdbcType="TINYINT" />
+		<result column="id" property="scopeId" jdbcType="VARCHAR" />
+		<result column="name" property="scopeName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="listActionScopes" resultMap="ActionScopeMap"
+		parameterType="String">
+		select robot_id id,
+		nick_name NAME, 1 type
+		from way_robot_manage where
+		1=2
+		<if test='_parameter.contains("1")'>
+			UNION
+			select
+			robot_id id,
+			nick_name NAME,
+			1 type
+			FROM
+			way_robot_manage
+		</if>
+		<if test='_parameter.contains("2")'>
+			UNION
+			select
+			robot_type_id id,
+			robot_type_name NAME,
+			2
+			type
+			FROM
+			way_robot_type
+		</if>
+		<if test='_parameter.contains("3")'>
+			UNION
+			select
+			install_site_id id,
+			site_name NAME,
+			3 type
+			FROM
+			way_robot_install_site
+		</if>
+	</select>
+
+
 
 </mapper>

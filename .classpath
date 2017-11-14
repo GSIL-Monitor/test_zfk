@@ -77,5 +77,8 @@
 	<classpathentry kind="lib" path="lib/jackson/jackson-annotations-2.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson/jackson-core-2.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/jackson/jackson-databind-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/mybatis/mybatis-3.2.6.jar"/>
+	<classpathentry kind="lib" path="lib/mybatis/mybatis-spring-1.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/mybatis/mysql-connector-java-5.1.30.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

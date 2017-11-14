@@ -2,9 +2,7 @@ package mybatis;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -15,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mybatis.dto.PageSearchDTO;
+import mybatis.dto.WayRobotActionScopeDTO;
 import mybatis.entity.WayMessagePublishDO;
 
 public class Test {
@@ -27,10 +26,24 @@ public class Test {
 		System.out.println(session);
 		//list();
 		// get();
-		insert();
+		//insert();
 		// update();
 		// delete();
+		List<WayRobotActionScopeDTO> list = listScopes();
+		System.out.println(list);
 
+	}
+
+	private static List<WayRobotActionScopeDTO> listScopes() {
+		try {
+			SqlSession session = sqlSessionFactory.openSession();
+			List<WayRobotActionScopeDTO> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listActionScopes", "3");
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 
 	private static void insert() {
@@ -86,7 +99,6 @@ public class Test {
 		System.out.println("###############");
 		ObjectMapper mapper = new ObjectMapper();
 
-		// ////User类转JSON////
 		// //User类转JSON//
 		// //User类转JSON//
 		String json = mapper.writeValueAsString(list);
