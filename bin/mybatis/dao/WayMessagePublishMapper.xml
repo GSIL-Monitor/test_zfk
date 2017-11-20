@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mybatis.dao.WayMessagePublishMapper">
+
+	<resultMap id="BaseResultMap" type="mybatis.entity.WayMessagePublishDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="message_id" property="messageId" jdbcType="VARCHAR" />
+		<result column="message_title" property="messageTitle"
+			jdbcType="VARCHAR" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="publish_status" property="publishStatus"
+			jdbcType="BIT" />
+		<result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+		<result column="subsystem_id" property="subsystemId" jdbcType="VARCHAR" />
+		<result column="modified_by" property="modifiedBy" jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modified_time" property="modifiedTime"
+			jdbcType="TIMESTAMP" />
+		<result column="message_content" property="messageContent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<resultMap id="ResultMapWithActioinScopes" type="mybatis.entity.WayMessagePublishDO"
+		extends="BaseResultMap">
+		<collection property="actionScopes" javaType="java.util.List"
+			ofType="mybatis.entity.WayRobotActionScopeDO">
+			<!-- <result column="id" property="id" jdbcType="BIGINT" /> -->
+			<result column="use_type" property="useType" jdbcType="BIT" />
+			<!-- <result column="use_id" property="useId" jdbcType="VARCHAR" /> -->
+			<result column="scope_type" property="scopeType" jdbcType="BIT" />
+			<result column="scope_id" property="scopeId" jdbcType="VARCHAR" />
+			<result column="scope_name" property="scopeName" jdbcType="VARCHAR" />
+			<!-- <result column="subsystem_id" property="subsystemId" jdbcType="VARCHAR" 
+				/> -->
+			<!-- <result column="modified_by" property="modifiedBy" jdbcType="BIGINT" 
+				/> -->
+			<!-- <result column="create_time" property="createTime" jdbcType="TIMESTAMP" 
+				/> -->
+			<!-- <result column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" 
+				/> -->
+		</collection>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, message_id, message_title, begin_time, end_time,
+		publish_status,is_deleted,
+		subsystem_id, modified_by, create_time,
+		modified_time, message_content
+	</sql>
+
+	<sql id="Main_Column_List">
+		a.id, a.message_id, a.message_title, a.begin_time,
+		a.end_time,
+		a.publish_status, a.is_deleted,
+		a.subsystem_id,
+		a.modified_by,
+		a.create_time, a.modified_time, a.message_content
+	</sql>
+
+	<sql id="Slave_Column_List">
+		b.id, b.use_type, b.use_id, b.scope_type,
+		b.scope_id,
+		(select c.name from
+		(select robot_id id, nick_name name from
+		way_robot_manage
+		UNION
+		select robot_type_id id, robot_type_name name
+		from way_robot_type
+		UNION
+		select install_site_id id, site_name name from
+		way_robot_install_site) c where b.scope_id = c.id) scope_name,
+		b.subsystem_id, b.modified_by,
+		b.create_time, b.modified_time
+	</sql>
+
+	<select id="getById" resultMap="ResultMapWithActioinScopes"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Main_Column_List" />
+		,
+		<include refid="Slave_Column_List" />
+		from way_message_publish a left join way_robot_action_scope b on
+		a.message_id = b.use_id where a.id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listByPage2" resultMap="ResultMapWithActioinScopes"
+		parameterType="mybatis.dto.PageSearchDTO">
+		select
+		<include refid="Main_Column_List" />
+		,
+		<include refid="Slave_Column_List" />
+		from way_message_publish a join way_robot_action_scope b on
+		a.message_id = b.use_id
+		<if test="key != null">
+			<!-- searchContents.messageTitle -->
+			where a.message_title like '%${key}%'
+			<!-- where a.message_title like CONCAT(CONCAT('%',#{key}), '%') -->
+		</if>
+		order by modified_time desc limit #{offset}, #{limit}
+	</select>
+
+	<select id="listByPage" resultMap="BaseResultMap" parameterType="mybatis.dto.PageSearchDTO">
+		select
+		<include refid="Base_Column_List" />
+		from way_message_publish
+		<if test="key != null">
+			<!-- where message_title like '%${key}%' -->
+			where message_title like CONCAT(CONCAT('%', #{key}), '%')
+		</if>
+		order by id desc limit #{offset},#{limit}
+	</select>
+
+	<select id="countAll" resultType="java.lang.Long">
+		select count(id) from
+		way_message_publish
+	</select>
+
+	<select id="listAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from way_message_publish
+	</select>
+
+	<insert id="insert" parameterType="mybatis.entity.WayMessagePublishDO">
+		insert into
+		way_message_publish (id, message_id, message_title,
+		begin_time,
+		end_time, publish_status,
+		is_deleted, subsystem_id, modified_by,
+		create_time, modified_time, message_content
+		)
+		values
+		(#{id,jdbcType=BIGINT}, #{messageId,jdbcType=VARCHAR},
+		#{messageTitle,jdbcType=VARCHAR},
+		#{beginTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}, #{publishStatus,jdbcType=TINYINT},
+		#{isDeleted,jdbcType=BIT}, #{subsystemId,jdbcType=VARCHAR},
+		#{modifiedBy,jdbcType=BIGINT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifiedTime,jdbcType=TIMESTAMP},
+		#{messageContent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+
+	<insert id="insertSlave" parameterType="java.util.List">
+		insert into
+		way_message_publish (id, message_id, message_title,
+		begin_time,
+		end_time, publish_status,
+		is_deleted, subsystem_id,
+		modified_by,
+		create_time, modified_time, message_content
+		)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id,jdbcType=BIGINT},
+			#{item.messageId,jdbcType=VARCHAR},
+			#{item.messageTitle,jdbcType=VARCHAR},
+			#{item.beginTime,jdbcType=TIMESTAMP},
+			#{item.endTime,jdbcType=TIMESTAMP},
+			#{item.publishStatus,jdbcType=TINYINT},
+			#{item.isDeleted,jdbcType=BIT},
+			#{item.subsystemId,jdbcType=VARCHAR},
+			#{item.modifiedBy,jdbcType=BIGINT},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.modifiedTime,jdbcType=TIMESTAMP},
+			#{item.messageContent,jdbcType=LONGVARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertSelective" parameterType="mybatis.entity.WayMessagePublishDO">
+		insert into way_message_publish
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="messageId != null">
+				message_id,
+			</if>
+			<if test="messageTitle != null">
+				message_title,
+			</if>
+			<if test="beginTime != null">
+				begin_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="publishStatus != null">
+				publish_status,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+			<if test="subsystemId != null">
+				subsystem_id,
+			</if>
+			<if test="modifiedBy != null">
+				modified_by,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifiedTime != null">
+				modified_time,
+			</if>
+			<if test="messageContent != null">
+				message_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="messageId != null">
+				#{messageId,jdbcType=VARCHAR},
+			</if>
+			<if test="messageTitle != null">
+				#{messageTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				#{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="publishStatus != null">
+				#{publishStatus,jdbcType=TINYINT},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=BIT},
+			</if>
+			<if test="subsystemId != null">
+				#{subsystemId,jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedBy != null">
+				#{modifiedBy,jdbcType=BIGINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifiedTime != null">
+				#{modifiedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="messageContent != null">
+				#{messageContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		way_message_publish
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<update id="updateByIdSelective" parameterType="mybatis.entity.WayMessagePublishDO">
+		update way_message_publish
+		<set>
+			<if test="messageId != null">
+				message_id = #{messageId,jdbcType=VARCHAR},
+			</if>
+			<if test="messageTitle != null">
+				message_title = #{messageTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				begin_time = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="publishStatus != null">
+				publish_status = #{publishStatus,jdbcType=TINYINT},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted,jdbcType=BIT},
+			</if>
+			<if test="subsystemId != null">
+				subsystem_id = #{subsystemId,jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedBy != null">
+				modified_by = #{modifiedBy,jdbcType=BIGINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifiedTime != null">
+				modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="messageContent != null">
+				message_content = #{messageContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateById" parameterType="mybatis.entity.WayMessagePublishDO">
+		update way_message_publish
+		set message_id = #{messageId,jdbcType=VARCHAR},
+		message_title =
+		#{messageTitle,jdbcType=VARCHAR},
+		begin_time =
+		#{beginTime,jdbcType=TIMESTAMP},
+		end_time =
+		#{endTime,jdbcType=TIMESTAMP},
+		publish_status =
+		#{publishStatus,jdbcType=TINYINT},
+		is_deleted =
+		#{isDeleted,jdbcType=BIT},
+		subsystem_id =
+		#{subsystemId,jdbcType=VARCHAR},
+		modified_by =
+		#{modifiedBy,jdbcType=BIGINT},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modified_time =
+		#{modifiedTime,jdbcType=TIMESTAMP},
+		message_content =
+		#{messageContent,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<resultMap id="ActionScopeMap"
+		type="mybatis.entity.WayRobotActionScopeDO">
+		<result column="type" property="scopeType" jdbcType="TINYINT" />
+		<result column="id" property="scopeId" jdbcType="VARCHAR" />
+		<result column="name" property="scopeName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="listActionScopes" resultMap="ActionScopeMap"
+		parameterType="String">
+		select robot_id id,
+		nick_name NAME, 1 type
+		from way_robot_manage where
+		1=2
+		<if test='_parameter.contains("1")'>
+			UNION
+			select
+			robot_id id,
+			nick_name NAME,
+			1 type
+			FROM
+			way_robot_manage
+		</if>
+		<if test='_parameter.contains("2")'>
+			UNION
+			select
+			robot_type_id id,
+			robot_type_name NAME,
+			2
+			type
+			FROM
+			way_robot_type
+		</if>
+		<if test='_parameter.contains("3")'>
+			UNION
+			select
+			install_site_id id,
+			site_name NAME,
+			3 type
+			FROM
+			way_robot_install_site
+		</if>
+	</select>
+
+
+
+</mapper>

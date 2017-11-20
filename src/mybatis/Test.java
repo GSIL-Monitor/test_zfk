@@ -13,8 +13,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mybatis.dto.PageSearchDTO;
-import mybatis.dto.WayRobotActionScopeDTO;
 import mybatis.entity.WayMessagePublishDO;
+import mybatis.entity.WayRobotActionScopeDO;
 
 public class Test {
 	static SqlSessionFactory sqlSessionFactory = MybatisDBUtil.getSqlSessionFactory();
@@ -29,15 +29,15 @@ public class Test {
 		//insert();
 		// update();
 		// delete();
-		List<WayRobotActionScopeDTO> list = listScopes();
+		List<WayRobotActionScopeDO> list = listScopes();
 		System.out.println(list);
 
 	}
 
-	private static List<WayRobotActionScopeDTO> listScopes() {
+	private static List<WayRobotActionScopeDO> listScopes() {
 		try {
 			SqlSession session = sqlSessionFactory.openSession();
-			List<WayRobotActionScopeDTO> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listActionScopes", "3");
+			List<WayRobotActionScopeDO> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listActionScopes", "3");
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
