@@ -10,7 +10,7 @@ public class One {
 		new Thread(){
 			@Override
 			public void run() {
-				Sender sender = new Sender("One");
+				Sender sender = new Sender();
 				sender.init("q.one");
 				for (;;) {
 					Scanner scan = new Scanner(System.in);
@@ -31,6 +31,6 @@ public class One {
 		
 		Receiver receiver = new Receiver();
 		receiver.init("q.two");
-		receiver.receive(null);
+		receiver.receive();
 	}
 }

@@ -12,7 +12,7 @@ public class Two {
 		new Thread(){
 			@Override
 			public void run() {
-				Sender sender = new Sender("Two");
+				Sender sender = new Sender();
 				sender.init("q.two");
 				for (;;) {
 					Scanner scan = new Scanner(System.in);
@@ -33,6 +33,6 @@ public class Two {
 		
 		Receiver receiver = new Receiver();
 		receiver.init("q.one");
-		receiver.receive(null);
+		receiver.receive();
 	}
 }

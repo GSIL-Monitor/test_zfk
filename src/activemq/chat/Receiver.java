@@ -71,8 +71,6 @@ public class Receiver {
 //			}
 //		}
 		
-		Scanner scan = new Scanner(System.in);
-		
 		//消息的消费者接收消息的第二种方式MessageListener
 		consumer.setMessageListener(new MessageListener(){  
             @Override  
@@ -84,7 +82,7 @@ public class Receiver {
 					e.printStackTrace();
 				}
             }
-        });  
+        });
 		
 		
 	}
