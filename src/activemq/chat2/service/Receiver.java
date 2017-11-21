@@ -1,4 +1,4 @@
-package activemq.chat;
+package activemq.chat2.service;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -42,7 +42,7 @@ public class Receiver {
 			// DUPS_OK_ACKNOWLEDGE允许副本的确认模式。一旦接收方应用程序的方法调用从处理消息处返回，会话对象就会确认消息的接收；而且允许重复确认。在需要考虑资源使用时，这种模式非常有效。
 			// 待测试
 			session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue(queueNam);// "q.one"
+			destination = session.createQueue(queueNam);//"q.one"
 			consumer = session.createConsumer(destination);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,43 +73,25 @@ public class Receiver {
 		// e.printStackTrace();
 		// }
 		// }
-
-		// 消息的消费者接收消息的第二种方式MessageListener
-		consumer.setMessageListener(listener);
-	}
-
-	public String receiveOne() throws JMSException {
-		TextMessage message = (TextMessage) consumer.receive();
-		return message.getText();
+		
+		//消息的消费者接收消息的第二种方式MessageListener
+		consumer.setMessageListener(listener);  
 	}
 
 	public static void main(String[] args) throws Exception {
 		Receiver receiver = new Receiver();
 		receiver.init("q.one");
-		//取一条
-		System.out.println("receiver==" + receiver.receiveOne());
-		receiver.receive(new MessageListener() {
-			@Override
-			public void onMessage(Message msg) {
-				TextMessage message = (TextMessage) msg;
-				try {
+		receiver.receive(new MessageListener(){  
+            @Override  
+            public void onMessage(Message msg) {  
+                TextMessage message = (TextMessage)msg;  
+                try {
 					System.out.println("接收消息=====" + message.getText());
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}
-			}
-		});
-		//关掉线程
-		new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				receiver.destroy();
-			};
-		}.start();
+            }
+        });
 	}
 
 }

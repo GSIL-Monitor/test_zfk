@@ -1,4 +1,4 @@
-package activemq.chat;
+package activemq.chat2.service;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -66,7 +66,7 @@ public class Sender {
 	
 	public static void main(String[] args) throws Exception {
 		Sender sender = new Sender();
-    	sender.init("q.one");
+    	sender.init("qq.one");
     	for (int i = 1; i <= 10; i++) {
     		System.out.println("发送消息===========哈喽_"+i);
     		sender.sendMessage("哈喽_"+i);
