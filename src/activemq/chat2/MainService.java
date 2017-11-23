@@ -65,7 +65,7 @@ public class MainService {
 							Session session = reService.getSession(robotId);
 							Queue<MessageData> queue = session.getMsgDataQueue();
 							while (queue.peek() != null) {
-								System.out.println(this.getName() + "收到消息：" + queue.poll().getMesage());
+								System.out.println(this.getName() + "收到消息：" + queue.poll().getContent());
 							}
 							try {
 								Thread.sleep(5000);
@@ -89,7 +89,7 @@ public class MainService {
 						data.setRobotName(session.getRobotName());
 						data.setUserId(session.getUserId());
 						data.setUserName(session.getUserName());
-						data.setMesage("你好，我是" + session.getUserName() + "！");
+						data.setContent("你好，我是" + session.getUserName() + "！");
 						data.setTime(new Date());
 						session.setLastTime(new Date());
 						seService.sendMessage(data);

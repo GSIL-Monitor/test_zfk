@@ -2,19 +2,20 @@ package activemq.chat2.entity;
 
 
 import java.util.Date;
+import com.alibaba.fastjson.JSONObject;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class MessageData {
+public class MessageData{
+	/*机器人信息*/
 	String robotId;
 	String robotName;
 	
+	/*用户信息*/
 	String userId;
 	String userName;
 	
-	String mesage;
-	
+	/*内容*/
+	String content;
+	/*时间*/
 	Date time;
 	
 	public String getRobotId() {
@@ -41,11 +42,11 @@ public class MessageData {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getMesage() {
-		return mesage;
+	public String getContent() {
+		return content;
 	}
-	public void setMesage(String mesage) {
-		this.mesage = mesage;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public Date getTime() {
 		return time;
@@ -56,11 +57,6 @@ public class MessageData {
 	
 	@Override
 	public String toString() {
-		try {
-			return new ObjectMapper().writeValueAsString(this);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return JSONObject.toJSONString(this);
 	}
 }

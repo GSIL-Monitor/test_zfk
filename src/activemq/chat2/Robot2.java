@@ -29,7 +29,7 @@ public class Robot2 {
 					MessageData data = new MessageData();
 					data.setRobotId("robotId2");
 					data.setRobotName("小龙人2号");
-					data.setMesage("你好，我是小龙人2号！");
+					data.setContent("你好，我是小龙人2号！");
 					data.setTime(new Date());
 					String msg = data.toString();
 		    		try {

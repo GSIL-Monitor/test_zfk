@@ -80,11 +80,10 @@
 	<classpathentry kind="lib" path="lib/mybatis/mybatis-3.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/mybatis/mybatis-spring-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/mybatis/mysql-connector-java-5.1.30.jar"/>
-	<classpathentry kind="lib" path="lib/activemq/activemq-broker-5.15.0.jar"/>
-	<classpathentry kind="lib" path="lib/activemq/activemq-client-5.15.0.jar"/>
 	<classpathentry kind="lib" path="lib/activemq/geronimo-j2ee-management_1.1_spec-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/activemq/geronimo-jms_1.1_spec-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/activemq/slf4j-api-1.7.25.jar"/>
 	<classpathentry kind="lib" path="lib/activemq/activemq-all-5.15.0.jar"/>
+	<classpathentry kind="lib" path="lib/activemq/fastjson-1.1.41.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
