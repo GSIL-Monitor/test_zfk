@@ -1,4 +1,4 @@
-package activemq.chat;
+package activemq.base;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -23,8 +23,13 @@ public class Receiver {
 	Destination destination;
 	// 消费者，消息接收者
 	MessageConsumer consumer;
+	
+	interface Type{
+		public static final int QUEUE = 1;
+		public static final int TOPIC = 2;
+	}
 
-	public void init(String queueNam) {
+	public void init(String destinationName, int type) {
 		try {
 			connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
 					ActiveMQConnection.DEFAULT_PASSWORD, "tcp://localhost:61616");
@@ -42,7 +47,11 @@ public class Receiver {
 			// DUPS_OK_ACKNOWLEDGE允许副本的确认模式。一旦接收方应用程序的方法调用从处理消息处返回，会话对象就会确认消息的接收；而且允许重复确认。在需要考虑资源使用时，这种模式非常有效。
 			// 待测试
 			session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue(queueNam);// "q.one"
+			if(type == Type.TOPIC){
+				destination = session.createTopic(destinationName);//"q.one"
+			}else{
+				destination = session.createQueue(destinationName);//"q.one"
+			}
 			consumer = session.createConsumer(destination);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +94,7 @@ public class Receiver {
 
 	public static void main(String[] args) throws Exception {
 		Receiver receiver = new Receiver();
-		receiver.init("q.one");
+		receiver.init("q.one", Receiver.Type.QUEUE);
 		//取一条
 		System.out.println("receiver==" + receiver.receiveOne());
 		receiver.receive(new MessageListener() {

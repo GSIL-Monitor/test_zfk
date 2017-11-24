@@ -1,34 +1,34 @@
-package activemq.chat2.service;
+package activemq.base;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public class Receiver {
-	// ConnectionFactory ：连接工厂，JMS 用它创建连接
-	ConnectionFactory connectionFactory;
-	// Connection ：JMS 客户端到JMS Provider 的连接
-	Connection connection = null;
-	// Session： 一个发送或接收消息的线程
-	Session session;
-	// Destination ：消息的目的地;消息发送给谁.
-	Destination destination;
-	// 消费者，消息接收者
-	MessageConsumer consumer;
+public class Sender {
+	ConnectionFactory connectionFactory; // ConnectionFactory--连接工厂，JMS用它创建连接
+	// Provider 的连接
+	Connection connection = null; // Connection ：JMS 客户端到JMS
+	Session session; // Session： 一个发送或接收消息的线程
+	Destination destination; // Destination ：消息的目的地;消息发送给谁.
+	MessageProducer producer; // MessageProducer：消息发送者
 
-	public void init(String queueNam) {
+	interface Type{
+		public static final int QUEUE = 1;
+		public static final int TOPIC = 2;
+	}
+	
+	public void init(String destinationName, int type) {
 		try {
+			// 构造ConnectionFactory实例对象，此处采用ActiveMq的实现jar
 			connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
 					ActiveMQConnection.DEFAULT_PASSWORD, "tcp://localhost:61616");
-
 			// 构造从工厂得到连接对象
 			connection = connectionFactory.createConnection();
 			// 启动
@@ -41,9 +41,17 @@ public class Receiver {
 			// 时候不确认消息,不确认的话不会移出队列，一直存在，下次启动继续接受。接收消息的连接不断开，其他的消费者也不会接受（正常情况下队列模式不存在其他消费者）
 			// DUPS_OK_ACKNOWLEDGE允许副本的确认模式。一旦接收方应用程序的方法调用从处理消息处返回，会话对象就会确认消息的接收；而且允许重复确认。在需要考虑资源使用时，这种模式非常有效。
 			// 待测试
-			session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue(queueNam);//"q.one"
-			consumer = session.createConsumer(destination);
+			session = connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
+			if(type == Type.TOPIC){
+				destination = session.createTopic(destinationName);//"q.one"
+			}else{
+				destination = session.createQueue(destinationName);//"q.one"
+			}
+			
+			// 得到消息生成者【发送者】
+			producer = session.createProducer(destination);
+			// 设置不持久化，此处学习，实际根据项目决定
+			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,40 +66,23 @@ public class Receiver {
 			}
 	}
 
-	public void receive(MessageListener listener) throws JMSException {
-		// 消息的消费者接收消息的第一种方式：consumer.receive() 或 consumer.receive(long timeout)
-		// while (true) {
-		// TextMessage message = (TextMessage) consumer.receive();
-		// if (null != message) {
-		// System.out.println("接收消息=======" + message.getText());
-		// } else {
-		// break;
-		// }
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		
-		//消息的消费者接收消息的第二种方式MessageListener
-		consumer.setMessageListener(listener);  
+	public void sendMessage(String msg) throws JMSException {
+		TextMessage message = session.createTextMessage(msg);
+		// 发送消息到目的地方
+		producer.send(message);
+		session.commit();
 	}
-
+	
+	
 	public static void main(String[] args) throws Exception {
-		Receiver receiver = new Receiver();
-		receiver.init("q.one");
-		receiver.receive(new MessageListener(){  
-            @Override  
-            public void onMessage(Message msg) {  
-                TextMessage message = (TextMessage)msg;  
-                try {
-					System.out.println("接收消息=====" + message.getText());
-				} catch (JMSException e) {
-					e.printStackTrace();
-				}
-            }
-        });
+		Sender sender = new Sender();
+    	sender.init("q.one", Sender.Type.QUEUE);
+    	for (int i = 1; i <= 10; i++) {
+    		System.out.println("发送消息===========哈喽_"+i);
+    		sender.sendMessage("哈喽_"+i);
+    		Thread.sleep(3000);
+    	}
+    	sender.destroy();
 	}
-
+	
 }

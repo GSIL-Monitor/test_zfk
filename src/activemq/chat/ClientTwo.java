@@ -7,8 +7,9 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-import activemq.chat2.service.Receiver;
-import activemq.chat2.service.Sender;
+import activemq.base.Receiver;
+import activemq.base.Sender;
+
 
 public class ClientTwo {
 	public static void main(String[] args) throws JMSException {
@@ -16,7 +17,7 @@ public class ClientTwo {
 			@Override
 			public void run() {
 				Sender sender = new Sender();
-				sender.init("q.two");
+				sender.init("q.two",1);
 				for (;;) {
 					Scanner scan = new Scanner(System.in);
 					System.out.println("Two请输入信息：");
@@ -36,7 +37,7 @@ public class ClientTwo {
 		}.start();
 		
 		Receiver receiver = new Receiver();
-		receiver.init("q.one");
+		receiver.init("q.one",1);
 		receiver.receive(new MessageListener(){
             @Override
             public void onMessage(Message msg) {
