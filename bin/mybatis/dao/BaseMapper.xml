@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mybatis.dao.BaseMapper">
+	<select id="scoreGroup" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select (case
+		when score >0 AND score&lt;= 0.4 THEN 40
+		when score >0.4
+		AND score&lt;= 0.6 THEN 60
+		when score >0.6 AND score&lt;= 0.8 THEN 80
+		when score >0.8 AND score&lt;= 1 THEN 100
+		else -1
+		end) score,
+		count(1)
+		count from way_robot_question_answer_log
+		where 1=1
+		<if test="subsystemId != null" >
+        	AND subsystem_id = #{subsystemId,jdbcType=VARCHAR},
+      	</if>
+		<if test="beginTime != null">
+			AND create_time &gt;= #{beginTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null">
+			AND create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		group by
+		(case
+		when score >0 AND score&lt;= 0.4 THEN 40
+		when score >0.4
+		AND score&lt;=
+		0.6 THEN 60
+		when score >0.6 AND score&lt;= 0.8 THEN 80
+		when score >0.8
+		AND score&lt;= 1 THEN 100
+		else -1
+		end)
+		order by score
+		desc;
+	</select>
+
+	<select id="typeScoreGroupAvg" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT CAST(T.gkb_type AS char) type, T.date time, avg(T.score) score from
+		(
+		SELECT
+		date_format(create_time, '%y-%m-%d') date,
+		score,
+		gkb_type,
+		subsystem_id
+		FROM
+		way_robot_question_answer_log
+		where 1=1
+		<if test="subsystemId != null" >
+        	AND subsystem_id = #{subsystemId,jdbcType=VARCHAR},
+      	</if>
+		<if test="beginTime != null">
+			AND create_time &gt;= #{beginTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null">
+			AND create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		) T GROUP BY T.gkb_type, T.date
+	</select>
+
+
+
+</mapper>

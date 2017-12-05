@@ -8,9 +8,9 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import activemq.base.Receiver;
+import activemq.base.Sender;
 import activemq.chat2.entity.MessageData;
-import activemq.chat2.service.Receiver;
-import activemq.chat2.service.Sender;
 
 public class Robot1 {
 	public static void main(String[] args) throws JMSException {
@@ -18,12 +18,12 @@ public class Robot1 {
 			@Override
 			public void run() {
 				Sender sender = new Sender();
-				sender.init("userId1.receive");
+				sender.init("q.one",1);
 				for (int i=1;i<1000;i++) {
-					//Scanner scan = new Scanner(System.in);
-					//System.out.println("Robot1：请输入信息：回车");
-					//String content = scan.nextLine();
-					String content = "我是小龙人—"+i;
+					Scanner scan = new Scanner(System.in);
+					System.out.println("Robot1：请输入信息：回车");
+					String content = scan.nextLine();
+					//String content = "我是小龙人—"+i;
 					if(content.equals("exit")){
 		    			break;
 		    		}
@@ -51,7 +51,7 @@ public class Robot1 {
 		}.start();
 		
 		Receiver receiver = new Receiver();
-		receiver.init("userId1.send");
+		receiver.init("q.two",1);
 		receiver.receive(new MessageListener(){
             @Override
             public void onMessage(Message msg) {  

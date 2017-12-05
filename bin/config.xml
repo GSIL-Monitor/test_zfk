@@ -34,5 +34,6 @@
 	<mappers>
 		<!-- 2.1 配置文件方式 -->
 		<mapper resource="mybatis/dao/WayMessagePublishMapper.xml" />
+		<mapper resource="mybatis/dao/BaseMapper.xml" />
 	</mappers>
 </configuration>

@@ -1,5 +1,6 @@
 package activemq.chat2.service;
 
+import activemq.base.Sender;
 import activemq.chat2.entity.MessageData;
 
 public class SenderService {
@@ -11,7 +12,7 @@ public class SenderService {
 	 * 实现步骤: <br>
 	 */
 	public void init(){
-		sender.init("q.two");
+		sender.init("q.two",1);
 	}
 	
 	/**

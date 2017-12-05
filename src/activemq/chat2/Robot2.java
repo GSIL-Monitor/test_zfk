@@ -8,9 +8,12 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import org.apache.activemq.command.ActiveMQBytesMessage;
+import org.apache.activemq.util.ByteSequence;
+
+import activemq.base.Receiver;
+import activemq.base.Sender;
 import activemq.chat2.entity.MessageData;
-import activemq.chat2.service.Receiver;
-import activemq.chat2.service.Sender;
 
 public class Robot2 {
 	public static void main(String[] args) throws JMSException {
@@ -18,7 +21,7 @@ public class Robot2 {
 			@Override
 			public void run() {
 				Sender sender = new Sender();
-				sender.init("q.one");
+				sender.init("chat-one",2);
 				for (;;) {
 					Scanner scan = new Scanner(System.in);
 					System.out.println("Robot2：请输入信息：回车");
@@ -45,16 +48,23 @@ public class Robot2 {
 		}.start();
 		
 		Receiver receiver = new Receiver();
-		receiver.init("q.two");
+		receiver.init("chat-two",2);
 		receiver.receive(new MessageListener(){
             @Override
             public void onMessage(Message msg) {  
-                TextMessage message = (TextMessage)msg;  
-                try {
-					System.out.println("Robot2：接收消息=====" + message.getText());
-				} catch (JMSException e) {
-					e.printStackTrace();
-				}
+            	if(msg instanceof ActiveMQBytesMessage){
+            		ActiveMQBytesMessage message = (ActiveMQBytesMessage)msg;
+            		ByteSequence byteSequence = message.getContent();
+            		System.out.println("Robot2：接收消息====="+new String(byteSequence.data));
+            	}else{
+            		TextMessage message = (TextMessage)msg;  
+                    try {
+    					System.out.println("Robot2：接收消息=====" + message.getText());
+    				} catch (JMSException e) {
+    					e.printStackTrace();
+    				}
+            	}
+                
             }
         });
 	}

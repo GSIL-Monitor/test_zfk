@@ -1,9 +1,9 @@
 package office.excel;
 
 public class Book {
-	String id;
-	String name;
-	String author;
+	private String id;
+	private String name;
+	private String author;
 	
 	public Book(String id, String name, String author) {
 		super();

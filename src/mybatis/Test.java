@@ -2,7 +2,11 @@ package mybatis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -29,9 +33,39 @@ public class Test {
 		//insert();
 		// update();
 		// delete();
-		List<WayRobotActionScopeDO> list = listScopes();
+		List<Map> list = typeScoreGroupAvg();
 		System.out.println(list);
 
+	}
+
+	private static List<Map> typeScoreGroupAvg() {
+		SqlSession session = sqlSessionFactory.openSession();
+		Map map = new HashMap();
+		Date beginTime = new Date(); 
+		beginTime.setDate(25);
+		System.out.println(beginTime);
+		LocalDateTime endTime = LocalDateTime.now();
+		System.out.println(endTime);
+		
+		map.put("beginTime", beginTime);
+		map.put("endTime", endTime);
+		List<Map> list = session.selectList("mybatis.dao.BaseMapper.typeScoreGroupAvg", map);
+		return list;
+	}
+
+	private static List<Map> scoreGroup() {
+		SqlSession session = sqlSessionFactory.openSession();
+		Map map = new HashMap();
+		Date beginTime = new Date(); 
+		beginTime.setDate(25);
+		System.out.println(beginTime);
+		LocalDateTime endTime = LocalDateTime.now();
+		System.out.println(endTime);
+		
+		map.put("beginTime", beginTime);
+		map.put("endTime", endTime);
+		List<Map> list = session.selectList("mybatis.dao.BaseMapper.scoreGroup", map);
+		return list;
 	}
 
 	private static List<WayRobotActionScopeDO> listScopes() {

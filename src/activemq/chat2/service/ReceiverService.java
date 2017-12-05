@@ -15,10 +15,11 @@ import javax.jms.TextMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import activemq.chat2.User;
+import activemq.base.Receiver;
 import activemq.chat2.entity.MessageData;
 import activemq.chat2.entity.Session;
 import activemq.chat2.entity.SessionStatus;
+import activemq.chat2.entity.User;
 
 public class ReceiverService {
 	Map<String, Session> sessionMap = new ConcurrentHashMap<String, Session>();
@@ -30,7 +31,7 @@ public class ReceiverService {
 			@Override
 			public void run() {
 				Receiver receiver = new Receiver();
-				receiver.init("q.one");
+				receiver.init("q.one",1);
 				try {
 					receiver.receive(new MessageListener() {
 						@Override

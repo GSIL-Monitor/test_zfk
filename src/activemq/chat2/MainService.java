@@ -8,6 +8,7 @@ import java.util.Scanner;
 import activemq.chat2.entity.MessageData;
 import activemq.chat2.entity.Session;
 import activemq.chat2.entity.SessionStatus;
+import activemq.chat2.entity.User;
 import activemq.chat2.service.ReceiverService;
 import activemq.chat2.service.SenderService;
 
