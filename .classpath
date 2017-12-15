@@ -92,5 +92,8 @@
 	<classpathentry kind="lib" path="lib/mail/mail.jar"/>
 	<classpathentry kind="lib" path="lib/itext/bcprov-jdk15on-147.jar"/>
 	<classpathentry kind="lib" path="lib/office/jacob.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-examples-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-excelant-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-scratchpad-3.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
