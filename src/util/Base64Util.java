@@ -1,4 +1,4 @@
-package httpclient;
+package util;
 
 import java.io.IOException;
 
