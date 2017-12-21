@@ -65,9 +65,6 @@
 	<classpathentry kind="lib" path="lib/office/itext-asian.jar"/>
 	<classpathentry kind="lib" path="lib/office/itextpdf-5.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/office/javacsv.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-ooxml-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-ooxml-schemas-3.14-20160307.jar"/>
 	<classpathentry kind="lib" path="lib/office/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson/jackson-annotations-2.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson/jackson-core-2.7.6.jar"/>
@@ -83,12 +80,9 @@
 	<classpathentry kind="lib" path="lib/hadoop/common/httpclient-4.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/hadoop/common/httpcore-4.3.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup/jsoup-1.11.2.jar" sourcepath="D:/maven_warehouse/org/jsoup/jsoup/1.11.2/jsoup-1.11.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-3.17.jar" sourcepath="D:/maven_warehouse/org/apache/poi/poi/3.17/poi-3.17-sources.jar"/>
 	<classpathentry kind="lib" path="lib/office/poi-ooxml-3.17.jar"/>
 	<classpathentry kind="lib" path="lib/office/poi-ooxml-schemas-3.17.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-examples-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-excelant-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="lib/office/poi-scratchpad-3.14-20160307.jar"/>
 	<classpathentry kind="lib" path="lib/mail/mail.jar"/>
 	<classpathentry kind="lib" path="lib/itext/bcprov-jdk15on-147.jar"/>
 	<classpathentry kind="lib" path="lib/office/jacob.jar"/>

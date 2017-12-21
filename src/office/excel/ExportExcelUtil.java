@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -82,12 +83,22 @@ public class ExportExcelUtil {
 				row = sheet.createRow(i + 1);
 				Object obj = datas.get(i);
 				Class clazz = obj.getClass();
-				for (int j = 0; j < propertyNames.length; j++) {
-					Field field = clazz.getDeclaredField(propertyNames[j]);
-					field.setAccessible(true);
-					String value = field.get(obj).toString();
-					Cell cell = row.createCell(j);
-					cell.setCellValue(value);
+				String clazzName = clazz.getName();
+				if (clazzName.contains("java.util.") && clazzName.contains("Map")) {
+					for (int j = 0; j < propertyNames.length; j++) {
+						Map map = (Map) obj;
+						String value = map.get(propertyNames[j]).toString();
+						Cell cell = row.createCell(j);
+						cell.setCellValue(value);
+					}
+				} else {
+					for (int j = 0; j < propertyNames.length; j++) {
+						Field field = clazz.getDeclaredField(propertyNames[j]);
+						field.setAccessible(true);
+						String value = field.get(obj).toString();
+						Cell cell = row.createCell(j);
+						cell.setCellValue(value);
+					}
 				}
 			}
 			out = new FileOutputStream(path);

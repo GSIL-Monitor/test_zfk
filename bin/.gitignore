@@ -1,3 +1,18 @@
 
 /.gitignore
+/activemq/
+/config.xml
+/db.properties
+/email/
+/ftp/
+/hadoop/
 /httpclient/
+/itext/
+/jackson/
+/log4j.properties
+/mybatis/
+/nio/
+/office/
+/security/
+/util/
+/zhidao/
