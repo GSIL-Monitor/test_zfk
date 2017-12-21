@@ -1,30 +1,34 @@
 package ftp;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+/**
+ * 
+ * <p>
+ * Description:
+ * </p>
+ * 
+ * @date 2017年12月21日
+ * @author 朱富昆
+ * @version 1.0.0 <artifactId>commons-net</artifactId>
+ */
 public class FtpUtil {
+
+	private static String host = "192.168.223.129";
+	private static int port = 4449;
+	private static String username = "zhufukun";
+	private static String password = "123456";
+	private static String basePath = "/home/zhufukun/upload/";
+
 	/**
 	 * Description: 向FTP服务器上传文件
 	 * 
-	 * @param host
-	 *            FTP服务器hostname
-	 * @param port
-	 *            FTP服务器端口
-	 * @param username
-	 *            FTP登录账号
-	 * @param password
-	 *            FTP登录密码
-	 * @param basePath
-	 *            FTP服务器基础目录
 	 * @param filePath
 	 *            FTP服务器文件存放路径。例如分日期存放：/2015/01/01。文件的路径为basePath+filePath
 	 * @param fileName
@@ -33,10 +37,8 @@ public class FtpUtil {
 	 *            输入流
 	 * @return 成功返回true，否则返回false
 	 */
-	public static String uploadFile(String host, int port, String username, String password, String basePath,
-			String filePath, String fileName, InputStream input) {
+	public static String uploadFile(String filePath, String fileName, InputStream input) {
 		FTPClient ftp = new FTPClient();
-
 		try {
 			int reply;
 			ftp.connect(host, port);// 连接FTP服务器
@@ -59,24 +61,38 @@ public class FtpUtil {
 					if (!ftp.changeWorkingDirectory(tempPath)) {
 						if (!ftp.makeDirectory(tempPath)) {
 							return null;
-						} else {
-							ftp.changeWorkingDirectory(tempPath);
 						}
+						// else {
+						// ftp.changeWorkingDirectory(tempPath);
+						// }
 					}
 				}
 			}
-			// 设置上传文件的类型为二进制类型
-			ftp.setFileType(FTP.BINARY_FILE_TYPE);
+
+			// 切换到上传目录
+			if (!ftp.changeWorkingDirectory(basePath + filePath)) {
+				return null;
+			}
+
+			// 设置文件类型，二进制
+			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+			// 设置缓冲区大小
+			ftp.setBufferSize(2048);
+			// 设置字符编码
+			ftp.setControlEncoding("UTF-8");
+
 			// 上传文件
 			if (!ftp.storeFile(fileName, input)) {
 				return null;
 			}
-			input.close();
-			ftp.logout();
 			return basePath + filePath + fileName;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			try {
+				ftp.logout();
+			} catch (IOException e) {
+			}
 			if (ftp.isConnected()) {
 				try {
 					ftp.disconnect();
@@ -88,28 +104,89 @@ public class FtpUtil {
 	}
 
 	/**
-	 * Description: 从FTP服务器下载文件
+	 * 从FTP服务器下载文件
 	 * 
-	 * @param host
-	 *            FTP服务器hostname
-	 * @param port
-	 *            FTP服务器端口
-	 * @param username
-	 *            FTP登录账号
-	 * @param password
-	 *            FTP登录密码
-	 * @param remotePath
+	 * @param filePath
 	 *            FTP服务器上的相对路径
 	 * @param fileName
 	 *            要下载的文件名
-	 * @param localPath
-	 *            下载后保存到本地的路径
 	 * @return
 	 */
-	public static boolean downloadFile(String host, int port, String username, String password, String remotePath,
-			String fileName, String localPath) {
-		boolean result = false;
+	public static byte[] downloadFile(String filePath, String fileName) {
 		FTPClient ftp = new FTPClient();
+		try {
+			int reply;
+			ftp.connect(host, port);
+			// 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
+			ftp.login(username, password);// 登录
+			reply = ftp.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				ftp.disconnect();
+				return null;
+			}
+			// 切换到上传目录
+			if (!ftp.changeWorkingDirectory(basePath + filePath)) {
+				return null;
+			}
+			InputStream ins = ftp.retrieveFileStream(fileName);
+			return inputStream2Byte(ins);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				ftp.logout();
+			} catch (IOException e) {
+			}
+			if (ftp.isConnected()) {
+				try {
+					ftp.disconnect();
+				} catch (IOException ioe) {
+				}
+			}
+		}
+		return null;
+	}
+
+	public static byte[] inputStream2Byte(InputStream ins) {
+		ByteArrayOutputStream out = null;
+		try {
+			out = new ByteArrayOutputStream();
+			byte[] buffer = new byte[2048];
+			int len;
+			while ((len = ins.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
+			}
+			out.flush();
+			return out.toByteArray();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				ins.close();
+			} catch (IOException e) {
+			}
+			try {
+				out.close();
+			} catch (IOException e) {
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 从FTP服务器下载文件
+	 * 
+	 * @param filePath
+	 *            FTP服务器上的相对路径
+	 * @param fileName
+	 *            要下载的文件名
+	 * @param out
+	 *            输出
+	 * @return
+	 */
+	public static boolean downloadFile(String filePath, String fileName, OutputStream out) {
+		FTPClient ftp = new FTPClient();
+		boolean result = false;
 		try {
 			int reply;
 			ftp.connect(host, port);
@@ -120,23 +197,18 @@ public class FtpUtil {
 				ftp.disconnect();
 				return result;
 			}
-			ftp.changeWorkingDirectory(remotePath);// 转移到FTP服务器目录
-			FTPFile[] fs = ftp.listFiles();
-			for (FTPFile ff : fs) {
-				if (ff.getName().equals(fileName)) {
-					File localFile = new File(localPath + "/" + ff.getName());
-
-					OutputStream is = new FileOutputStream(localFile);
-					ftp.retrieveFile(ff.getName(), is);
-					is.close();
-				}
+			// 切换到上传目录
+			if (!ftp.changeWorkingDirectory(basePath + filePath)) {
+				return result;
 			}
-
-			ftp.logout();
-			result = true;
+			result = ftp.retrieveFile(fileName, out);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			try {
+				ftp.logout();
+			} catch (IOException e) {
+			}
 			if (ftp.isConnected()) {
 				try {
 					ftp.disconnect();
@@ -146,4 +218,41 @@ public class FtpUtil {
 		}
 		return result;
 	}
+
+	public static boolean deleteFile(String filePath, String fileName) {
+		FTPClient ftp = new FTPClient();
+		boolean result = false;
+		try {
+			int reply;
+			ftp.connect(host, port);
+			// 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
+			ftp.login(username, password);// 登录
+			reply = ftp.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				ftp.disconnect();
+				return result;
+			}
+			// 切换到上传目录
+			if (!ftp.changeWorkingDirectory(basePath + filePath)) {
+				return result;
+			}
+			// 删除文件
+			result = ftp.deleteFile(fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				ftp.logout();
+			} catch (IOException e) {
+			}
+			if (ftp.isConnected()) {
+				try {
+					ftp.disconnect();
+				} catch (IOException ioe) {
+				}
+			}
+		}
+		return result;
+	}
+
 }
