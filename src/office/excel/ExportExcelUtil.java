@@ -82,7 +82,7 @@ public class ExportExcelUtil {
 			for (int i = 0; i < datas.size(); i++) {
 				row = sheet.createRow(i + 1);
 				Object obj = datas.get(i);
-				Class clazz = obj.getClass();
+				Class<? extends Object> clazz = obj.getClass();
 				String clazzName = clazz.getName();
 				if (clazzName.contains("java.util.") && clazzName.contains("Map")) {
 					for (int j = 0; j < propertyNames.length; j++) {
