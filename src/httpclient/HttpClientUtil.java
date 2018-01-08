@@ -17,13 +17,11 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -102,10 +100,10 @@ public class HttpClientUtil {
 			// get = new HttpGet("/FengYan/");
 
 			get = new HttpGet(url);
-			// 设置连接超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			get.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -185,10 +183,10 @@ public class HttpClientUtil {
 		try {
 			CloseableHttpClient httpclient = HttpClients.createDefault();
 			post = new HttpPost(url);
-			// 设置连接超时60秒
-			post.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			post.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			post.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -277,10 +275,10 @@ public class HttpClientUtil {
 		try {
 			httpclient = HttpClients.createDefault();
 			get = new HttpGet(url);
-			// 设置连接超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			get.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -348,10 +346,10 @@ public class HttpClientUtil {
 		try {
 			httpclient = HttpClients.createDefault();
 			get = new HttpGet(url);
-			// 设置连接超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			get.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -457,10 +455,10 @@ public class HttpClientUtil {
 		try {
 			httpclient = HttpClients.createDefault();
 			post = new HttpPost(url);
-			// 设置连接超时60秒
-			post.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			post.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			post.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -596,10 +594,10 @@ public class HttpClientUtil {
 		try {
 			CloseableHttpClient httpclient = HttpClients.createDefault();
 			get = new HttpGet(url);
-			// 设置连接超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout * 1000);
-			// 设置响应超时60秒
-			get.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout * 1000);
+			// 设置超时
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeout * 1000)
+					.setConnectionRequestTimeout(2000).setSocketTimeout(soTimeout * 1000).build();
+			get.setConfig(requestConfig);
 
 			// 设置请求头
 			if (headers != null) {
@@ -800,8 +798,7 @@ public class HttpClientUtil {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * post方法获取获取响应头
 	 * 
@@ -840,6 +837,7 @@ public class HttpClientUtil {
 			String charset) {
 		return doPost2Headers(url, headers, params, body, charset, 60, 60, 1);
 	}
+
 	/**
 	 * post方法获取响应头
 	 * 
@@ -897,7 +895,6 @@ public class HttpClientUtil {
 				}
 			}
 			HttpResponse response = httpclient.execute(post);
-			StatusLine status = response.getStatusLine();
 			if (null == response.getAllHeaders()) {
 				if (tryCount > 1) {
 					doPost2Content(url, headers, params, body, charset, connectionTimeout, soTimeout, --tryCount);

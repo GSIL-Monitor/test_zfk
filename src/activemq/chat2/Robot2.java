@@ -22,7 +22,7 @@ public class Robot2 {
 			public void run() {
 				Sender sender = new Sender();
 				sender.init("chat-one",2);
-				for (;;) {
+				for (int i=1;i<1000;i++) {
 					Scanner scan = new Scanner(System.in);
 					System.out.println("Robot2：请输入信息：回车");
 					String lineStr = scan.nextLine();
@@ -32,7 +32,9 @@ public class Robot2 {
 					MessageData data = new MessageData();
 					data.setRobotId("robotId2");
 					data.setRobotName("小龙人2号");
-					data.setContent("你好，我是小龙人2号！");
+					data.setUserId("userId1");
+					data.setUserName("朱富昆");
+					data.setContent("你好，我是小龙人2号-"+i);
 					data.setTime(new Date());
 					String msg = data.toString();
 		    		try {

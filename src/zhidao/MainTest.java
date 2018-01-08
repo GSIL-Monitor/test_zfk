@@ -10,6 +10,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import util.HttpRequestUtil;
+
 public class MainTest {
 	public static void main(String[] args) throws UnsupportedEncodingException {
 
