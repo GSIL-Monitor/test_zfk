@@ -18,9 +18,11 @@ public class Redis {
 	// 非切片连接池
 	private JedisPool jedisPool = null;
 
-	private String host = "127.0.0.1";
+	private String host = "192.168.1.28";
 
 	private int port = 6379;
+	
+	private String password = "hemei2017";
 	
 	private int timeout = 10 * 1000;
 
@@ -47,7 +49,7 @@ public class Redis {
 			config.setMaxIdle(5);
 			config.setMaxWaitMillis(5000L);
 			config.setTestOnBorrow(false);
-			jedisPool = new JedisPool(config, host, port, timeout);
+			jedisPool = new JedisPool(config, host, port, timeout, password);
 		} catch (Exception e) {
 			log.error("redis.Redis.initialPool()",e);
 			e.printStackTrace();

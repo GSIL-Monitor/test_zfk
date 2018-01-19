@@ -8,9 +8,12 @@ public class TestRedis {
 		Jedis jedis = new Jedis("127.0.0.1", 6379);
         System.out.println(jedis);
 		
-		Redis.getInstance().setValue("user-zfk-name", "zhufukun");
-		Redis.getInstance().setValue("user-zfk-name", "zhufukun1");
-		Redis.getInstance().setValueEx("user-zfk-age", "22", 60);
+		Redis.getInstance().setValue("way_robot_num_6e770679f9c811e792d400505687a0a9", "0");
+//		Redis.getInstance().setValue("user-zfk-name", "zhufukun1");
+//		Redis.getInstance().setValueEx("user-zfk-age", "22", 60);
+        
+        System.out.println(Redis.getInstance().getValue("way_robot_num_6e770679f9c811e792d400505687a0a9"));
+        
 	}
 
 	
