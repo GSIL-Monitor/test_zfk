@@ -8,33 +8,31 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import util.SerializeUtil;
 
+public class RedisClient {
 
-public class Redis {
+	private static final Log log = LogFactory.getLog(RedisClient.class);
 
-	private static final Log log = LogFactory.getLog(Redis.class);
-
-	private static Redis instance = null;
+	private static RedisClient instance = null;
 
 	// 非切片连接池
 	private JedisPool jedisPool = null;
 
-	private String host = "192.168.1.28";
+	private String host = "127.0.0.1";
 
 	private int port = 6379;
-	
-	private String password = "hemei2017";
-	
+
+	private String password = "";
+
 	private int timeout = 10 * 1000;
 
-	public synchronized static Redis getInstance() {
+	public synchronized static RedisClient getInstance() {
 		if (instance == null) {
-			instance = new Redis();
+			instance = new RedisClient();
 		}
 		return instance;
 	}
 
-	
-	private Redis() {
+	private RedisClient() {
 		initialPool();
 	}
 
@@ -47,13 +45,23 @@ public class Redis {
 			JedisPoolConfig config = new JedisPoolConfig();
 			config.setMaxIdle(20);
 			config.setMaxIdle(5);
+			config.setMaxTotal(100);
 			config.setMaxWaitMillis(5000L);
 			config.setTestOnBorrow(false);
 			jedisPool = new JedisPool(config, host, port, timeout, password);
 		} catch (Exception e) {
-			log.error("redis.Redis.initialPool()",e);
+			log.error("redis.Redis.initialPool()", e);
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 获取jedis连接，方便自己操作
+	 * 
+	 * @return
+	 */
+	public Jedis getJedis() {
+		return jedisPool.getResource();
 	}
 
 	/**
@@ -61,7 +69,7 @@ public class Redis {
 	 * 
 	 * @param key
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public String getValue(String key) throws Exception {
 		String value = "";
@@ -75,7 +83,9 @@ public class Redis {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			returnResource(jedis);
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 		return value;
 
@@ -90,19 +100,21 @@ public class Redis {
 	public Object getObject(String key) {
 		Object obj = null;
 		Jedis jedis = null;
-		try{
+		try {
 			jedis = jedisPool.getResource();
 			byte[] value = jedis.get(SerializeUtil.serialize(key));
 
 			if (null != value && value.length != 0) {
 				obj = SerializeUtil.unserialize(value);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			instance = null;
 			e.printStackTrace();
 			log.error("get jedis exception", e);
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 
 		return obj;
@@ -119,15 +131,17 @@ public class Redis {
 	public void setValue(String key, String value) {
 
 		Jedis jedis = null;
-		try{
+		try {
 			jedis = jedisPool.getResource();
 			jedis.set(key, value);
-		}catch(Exception e){
+		} catch (Exception e) {
 			instance = null;
 			e.printStackTrace();
 			log.error("set jedis exception", e);
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
@@ -141,16 +155,17 @@ public class Redis {
 	 */
 	public void setValue(Object key, Object value) {
 		Jedis jedis = null;
-		try{
+		try {
 			jedis = jedisPool.getResource();
-			jedis.set(SerializeUtil.serialize(key), SerializeUtil
-					.serialize(value));
-		}catch(Exception e){
+			jedis.set(SerializeUtil.serialize(key), SerializeUtil.serialize(value));
+		} catch (Exception e) {
 			instance = null;
 			e.printStackTrace();
 			log.error("set jedis exception", e);
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
@@ -163,20 +178,22 @@ public class Redis {
 	 *            值
 	 * @param seconds
 	 *            失效时间，单位秒
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public String setValueEx(String key, String value, int seconds) throws Exception {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
-			return jedis.setex(key, seconds, value); 
+			return jedis.setex(key, seconds, value);
 		} catch (Exception e) {
 			e.printStackTrace();
 			instance = null;
-			log.error("=============缓存有失效时间的数据失败=============",e);
+			log.error("=============缓存有失效时间的数据失败=============", e);
 			throw e;
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
@@ -192,18 +209,19 @@ public class Redis {
 	 */
 	public void setValueEx(Object key, Object value, int seconds) {
 		Jedis jedis = null;
-		try{
+		try {
 			jedis = jedisPool.getResource();
 			// jedis.setex(SerializeUtil.serialize(key), seconds,
 			// SerializeUtil.serialize(key));
-			jedis.setex(SerializeUtil.serialize(key), seconds, SerializeUtil
-					.serialize(value));
-		}catch(Exception e){
+			jedis.setex(SerializeUtil.serialize(key), seconds, SerializeUtil.serialize(value));
+		} catch (Exception e) {
 			instance = null;
 			e.printStackTrace();
 			log.error("set jedisEx exception", e);
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
@@ -212,30 +230,53 @@ public class Redis {
 	 * 
 	 * @param key
 	 */
-	public void delValue(String key) throws Exception{
+	public void delValue(String key) {
 		Jedis jedis = null;
-		try{
+		try {
 			jedis = jedisPool.getResource();
 			jedis.del(key);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			instance = null;
 			log.error("del jedis exception", e);
 			throw e;
-		}finally{
-			returnResource(jedis);
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
+	
+	public Boolean existsObject(Object key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.exists(SerializeUtil.serialize(key));
+        }catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }finally{
+            if(jedis != null)
+            {
+                jedis.close();
+            }
+        }
+    }
+	
+	public Boolean existsObject(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.exists(key);
+        }catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }finally{
+            if(jedis != null)
+            {
+                jedis.close();
+            }
+        }
+    }
 
-	/**
-	 * 释放连接资源
-	 * 
-	 * @param jedis
-	 */
-	private void returnResource(Jedis jedis) {
-
-		if (null != jedisPool && jedis != null) {
-			jedisPool.returnResource(jedis);
-		}
-	}
 }

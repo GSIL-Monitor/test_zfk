@@ -11,11 +11,7 @@ public class BaiduService {
 	private static final String ZHIDAO_URL = "https://zhidao.baidu.com/search?word=";
 	private static final String BAIDU_URL = "https://www.baidu.com/s?wd=";
 	private static final String BAIKE_URL = "https://baike.baidu.com/search?word=";
-
-	public static final String APP_ID = "10553092";
-	public static final String API_KEY = "Ir0OF6urUXtl0Gg399BgYFVw";
-	public static final String SECRET_KEY = "zODDZ7FSll06dcYMFmms9hdn5a77C49b";
-
+	
 	/**
 	 * 百度知道查询 方法用途: <br>
 	 * 
