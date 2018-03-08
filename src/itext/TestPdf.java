@@ -321,18 +321,20 @@ public class TestPdf {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (bos != null)
+			if (bos != null){
 				try {
 					bos.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			if (stamper != null)
+			}
+			if (stamper != null){
 				try {
 					stamper.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return null;
 	}
@@ -387,18 +389,20 @@ public class TestPdf {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (bos != null)
+			if (bos != null){
 				try {
 					bos.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			if (stamper != null)
+			}
+			if (stamper != null){
 				try {
 					stamper.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+		}
 		}
 		return null;
 	}
@@ -463,18 +467,20 @@ public class TestPdf {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (bos != null)
+			if (bos != null){
 				try {
 					bos.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			if (stamper != null)
+			}
+			if (stamper != null){
 				try {
 					stamper.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return null;
 	}

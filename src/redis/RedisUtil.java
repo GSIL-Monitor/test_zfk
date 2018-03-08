@@ -782,8 +782,9 @@ public class RedisUtil {
 			Jedis sjedis = getJedis();
 			Double score = sjedis.zscore(key, memebr);
 			closeJedis(sjedis);
-			if (score != null)
+			if (score != null){
 				return score;
+			}
 			return 0;
 		}
 	}

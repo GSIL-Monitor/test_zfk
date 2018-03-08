@@ -269,7 +269,7 @@ public class MD5Util
         } catch (Exception e)
         {
             log.error("error.", e);
-            if (in != null)
+            if (in != null){
                 try
                 {
                     in.close();
@@ -277,6 +277,7 @@ public class MD5Util
                 {
                     log.error("error.", ex);
                 }
+            }
         }
         return hash;
     }

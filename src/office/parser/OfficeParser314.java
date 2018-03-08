@@ -916,7 +916,7 @@ public class OfficeParser314
             return "";
         } finally
         {
-            if (is != null)
+            if (is != null){
                 try
                 {
                     is.close();
@@ -924,6 +924,7 @@ public class OfficeParser314
                 {
                     e.printStackTrace();
                 }
+            }
         }
     }
 

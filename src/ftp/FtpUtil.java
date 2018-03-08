@@ -55,8 +55,9 @@ public class FtpUtil {
 				String[] dirs = filePath.split("/");
 				String tempPath = basePath;
 				for (String dir : dirs) {
-					if (null == dir || "".equals(dir))
+					if (null == dir || "".equals(dir)){
 						continue;
+					}
 					tempPath += "/" + dir;
 					if (!ftp.changeWorkingDirectory(tempPath)) {
 						if (!ftp.makeDirectory(tempPath)) {

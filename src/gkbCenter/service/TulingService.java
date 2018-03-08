@@ -23,8 +23,9 @@ public class TulingService {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("key", KEY);
 			paramMap.put("info", question);
-			if ((user != null) && (user.length() > 0))
+			if ((user != null) && (user.length() > 0)){
 				paramMap.put("userid", user);
+			}
 			String result = HttpRequestUtil.sendPost(TuLingURL, paramMap);
 
 			JSONObject jsonObject = JSONObject.parseObject(result);

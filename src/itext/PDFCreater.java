@@ -38,8 +38,8 @@ public class PDFCreater {
 			int fontSize = 12;
 			int fontType = Font.NORMAL;// 字体类型
 			try {
-				helvetica = BaseFont.createFont("C:/Windows/Fonts/SIMYOU.TTF",
-						BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+				helvetica = BaseFont.createFont("C:/Windows/Fonts/SIMYOU.TTF", BaseFont.IDENTITY_H,
+						BaseFont.NOT_EMBEDDED);
 				font = new Font(helvetica, fontSize, fontType);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -57,8 +57,7 @@ public class PDFCreater {
 				if (p.get(i).getType().equals("title")) {
 					if (p.get(i).getType().equals("title")) {
 						title = p.get(i).getContent();
-						Paragraph titlePar = new Paragraph(title, new Font(
-								helvetica, 25, Font.BOLD));
+						Paragraph titlePar = new Paragraph(title, new Font(helvetica, 25, Font.BOLD));
 						titlePar.setAlignment(Element.ALIGN_CENTER);
 						doc.add(titlePar);
 						doc.add(new Paragraph(""));// 添加一行以便添加作者与日期
@@ -73,9 +72,8 @@ public class PDFCreater {
 					date = p.get(i).getContent();
 				}
 				if (auther != null && date != null) {
-					Paragraph aAndd = new Paragraph("作者：" + auther
-							+ "                日期：" + date, new Font(helvetica,
-							12, Font.BOLD));
+					Paragraph aAndd = new Paragraph("作者：" + auther + "                日期：" + date,
+							new Font(helvetica, 12, Font.BOLD));
 					aAndd.setSpacingBefore(10);
 					aAndd.setAlignment(Element.ALIGN_CENTER);
 					doc.add(aAndd);
@@ -87,31 +85,25 @@ public class PDFCreater {
 			 * 如果即非标题也非作者与日期时，添加页面中的其他元素
 			 */
 			for (int i = 0; i < p.size(); i++) {
-				if (p.get(i).getType().contains("img")
-						|| p.get(i).getType().contains("imageByte")) {
-					Image b = (p.get(i).getType().contains("img") ? Image
-							.getInstance(p.get(i).getContent()) : Image
-							.getInstance(p.get(i).getImagByte()));
-					float widthPerPercenta = (p.get(i).getImgWidth() == 0 ? 0.7f
-							: p.get(i).getImgWidth());
+				if (p.get(i).getType().contains("img") || p.get(i).getType().contains("imageByte")) {
+					Image b = (p.get(i).getType().contains("img") ? Image.getInstance(p.get(i).getContent())
+							: Image.getInstance(p.get(i).getImagByte()));
+					float widthPerPercenta = (p.get(i).getImgWidth() == 0 ? 0.7f : p.get(i).getImgWidth());
 					float newWidth = width * widthPerPercenta;
-					float newHeight = b.getHeight() / b.getWidth() * width
-							* widthPerPercenta;
+					float newHeight = b.getHeight() / b.getWidth() * width * widthPerPercenta;
 					b.scaleAbsolute(newWidth, newHeight);
 					b.setBottom(5.0f);
 					b.setAlignment(Element.ALIGN_CENTER);
 					doc.add(b);
 				} else if (p.get(i).getType().contains("p")) {
-					Paragraph para = new Paragraph(p.get(i).getContent(),
-							new Font(helvetica, 13, Font.NORMAL));
+					Paragraph para = new Paragraph(p.get(i).getContent(), new Font(helvetica, 13, Font.NORMAL));
 					font.setColor(BaseColor.GRAY);
 					para.setFirstLineIndent(26);
 					para.setSpacingAfter(10);
 					para.setSpacingBefore(10);
 					doc.add(para);// 设置缩进为2
 				} else if (p.get(i).getType().contains("h1")) {
-					Paragraph para = new Paragraph(p.get(i).getContent(),
-							new Font(helvetica, 15, Font.BOLD));
+					Paragraph para = new Paragraph(p.get(i).getContent(), new Font(helvetica, 15, Font.BOLD));
 					para.setSpacingAfter(10);
 					para.setSpacingBefore(10);
 					font.setColor(BaseColor.BLACK);
@@ -119,9 +111,8 @@ public class PDFCreater {
 				} else if (p.get(i).getType().contains("list")) {
 					// List<Paragraph> list = new ArrayList<Paragraph>();
 					for (int j = 0; j < p.get(i).getCells().size(); j++) {
-						Paragraph para = new Paragraph(p.get(i).getCells().get(
-								j), new Font(helvetica, 13, Font.NORMAL,
-								BaseColor.DARK_GRAY));
+						Paragraph para = new Paragraph(p.get(i).getCells().get(j),
+								new Font(helvetica, 13, Font.NORMAL, BaseColor.DARK_GRAY));
 						// list.add(para);
 						doc.add(para);
 					}
@@ -132,19 +123,16 @@ public class PDFCreater {
 					for (int k = 0; k < p.get(i).getCells().size(); k++) {
 						if (k % tableColum == 0)// 如果是首列字体为粗体
 						{
-							Paragraph para = new Paragraph(p.get(i).getCells()
-									.get(k), new Font(helvetica, 13, Font.BOLD,
-									BaseColor.DARK_GRAY));
+							Paragraph para = new Paragraph(p.get(i).getCells().get(k),
+									new Font(helvetica, 13, Font.BOLD, BaseColor.DARK_GRAY));
 							para.setAlignment(Element.ALIGN_CENTER);
 							table.addCell(para);
 						} else {
-							Paragraph para = new Paragraph(p.get(i).getCells()
-									.get(k), new Font(helvetica, 13,
-									Font.NORMAL, BaseColor.DARK_GRAY));
+							Paragraph para = new Paragraph(p.get(i).getCells().get(k),
+									new Font(helvetica, 13, Font.NORMAL, BaseColor.DARK_GRAY));
 							para.setAlignment(Element.ALIGN_CENTER);
-							table.addCell(new Paragraph(p.get(i).getCells()
-									.get(k), new Font(helvetica, 13, Font.BOLD,
-									BaseColor.DARK_GRAY)));
+							table.addCell(new Paragraph(p.get(i).getCells().get(k),
+									new Font(helvetica, 13, Font.BOLD, BaseColor.DARK_GRAY)));
 						}
 					}
 					table.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -156,6 +144,7 @@ public class PDFCreater {
 				 * 添加文档页数,如果pdf页面有添加的话(只添加一次)
 				 */
 				writer.setPageEvent(new PdfPageEventHelper() {
+					@Override
 					public void onEndPage(PdfWriter writer, Document document) {
 
 						PdfContentByte cb = writer.getDirectContent();
@@ -163,8 +152,7 @@ public class PDFCreater {
 						cb.beginText();
 						BaseFont bf = null;
 						try {
-							bf = BaseFont.createFont(BaseFont.HELVETICA,
-									BaseFont.WINANSI, BaseFont.EMBEDDED);
+							bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -174,8 +162,7 @@ public class PDFCreater {
 						float x = document.bottom(-20);
 
 						// 中
-						cb.showTextAligned(PdfContentByte.ALIGN_CENTER, String
-								.format("-%s-", writer.getPageNumber()),
+						cb.showTextAligned(PdfContentByte.ALIGN_CENTER, String.format("-%s-", writer.getPageNumber()),
 								(document.right() + document.left()) / 2, x, 0);
 						cb.endText();
 						cb.restoreState();
@@ -289,8 +276,7 @@ public class PDFCreater {
 				while (pageOfCurrentReaderPDF < pdfReader.getNumberOfPages()) {
 					document.newPage();
 					pageOfCurrentReaderPDF++;
-					PdfImportedPage page = writer.getImportedPage(pdfReader,
-							pageOfCurrentReaderPDF);
+					PdfImportedPage page = writer.getImportedPage(pdfReader, pageOfCurrentReaderPDF);
 					cb.addTemplate(page, 0, 0);
 				}
 				pageOfCurrentReaderPDF = 0;
@@ -324,12 +310,10 @@ public class PDFCreater {
 					continue;
 				}
 				if (p.get(i).getContent().contains("·")) {
-					p.get(i).setContent(
-							p.get(i).getContent().replaceAll("·", ""));
+					p.get(i).setContent(p.get(i).getContent().replaceAll("·", ""));
 				}
 				if (p.get(i).getContent().contains("……")) {
-					p.get(i).setContent(
-							p.get(i).getContent().replaceAll("……", "......"));
+					p.get(i).setContent(p.get(i).getContent().replaceAll("……", "......"));
 				}
 			}
 		} catch (Exception e) {

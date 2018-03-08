@@ -19,8 +19,7 @@ import java.util.Scanner;
 public class Client {
 	public static void main(String[] args) throws IOException {
 		// 1.获取通道
-		SocketChannel sChannel = SocketChannel.open(new InetSocketAddress(
-				"127.0.0.1", 8000));
+		SocketChannel sChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 8000));
 
 		// 2.通道默认是阻塞的，切换通道为非阻塞
 		sChannel.configureBlocking(false);
@@ -44,8 +43,7 @@ public class Client {
 		while (scan.hasNext()) {
 			String str = scan.nextLine();
 			// 上车
-			buffer.put((new Date().toString() + "\n(" + name + ")" + str)
-					.getBytes());
+			buffer.put((new Date().toString() + "\n(" + name + ")" + str).getBytes());
 			// 下车
 			buffer.flip();
 			sChannel.write(buffer);
@@ -68,6 +66,7 @@ class GetMessageHandler implements Runnable {
 		this.sChannel = sChannel;
 	}
 
+	@Override
 	public void run() {
 		try {
 
@@ -95,8 +94,7 @@ class GetMessageHandler implements Runnable {
 						int len = 0;
 						while ((len = channel.read(buffer)) > 0) {
 							buffer.flip();
-							System.out.println(new String(buffer.array(), 0,
-									len));
+							System.out.println(new String(buffer.array(), 0, len));
 							buffer.clear();
 						}
 					} else if (key.isWritable()) {
