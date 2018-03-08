@@ -20,6 +20,10 @@ package datastructure.hashtree;
  * 哈希树的理论基础
  * 
  * 【质数分辨定理】 简单地说就是：n个不同的质数可以“分辨”的连续整数的个数和他们的乘积相等。“分辨”就是指这些连续的整数不可能有完全相同的余数序列。
+ * 从2起的连续质数，连续10个质数就可以分辨大约M(10) =2*3*5*7*11*13*17*19*23*29= 6464693230
+ * 个数，已经超过计算机中常用整数（32bit）的表达范围。连续100个质数就可以分辨大约M(100) = 4.711930 乘以10的219次方。
+ * 而按照目前的CPU水平，100次取余的整数除法操作几乎不算什么难事。在实际应用中，整体的操作速度往往取决于节点将关键字装载内存的次数和时间。一般来说，
+ * 装载的时间是由关键字的大小和硬件来决定的；在相同类型关键字和相同硬件条件下，实际的整体操作时间就主要取决于装载的次数。他们之间是一个成正比的关系。
  * 
  * 我们选择质数分辨算法来建立一棵哈希树。
  * 选择从2开始的连续质数来建立一个十层的哈希树。第一层结点为根结点，根结点下有2个结点；第二层的每个结点下有3个结点；依此类推，
@@ -28,7 +32,7 @@ package datastructure.hashtree;
  */
 public class HashTree<V> {
 
-	private int[] primeNums = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
+	private int[] primeNums = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
 
 	private transient Node<V> root;
 
@@ -36,11 +40,19 @@ public class HashTree<V> {
 		root = new Node<V>(0, 0, null, makeChildren(0));
 	}
 
+	/**
+	 * 
+	 * 方法用途: <br>
+	 * 实现步骤: <br>
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public V add(V value) {
 		int hash = hash(value);
 		Node<V> node = root;
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < primeNums.length; i++) {
 			int mod = hash % primeNums[i];
 			if (node.getChildren()[mod] == null) {
 				node.getChildren()[mod] = new Node<V>(i + 1, mod, value, makeChildren(i + 1));
@@ -57,30 +69,30 @@ public class HashTree<V> {
 		return null;
 	}
 
-	public V get(V value) {
+	public boolean contain(V value) {
 		int hash = hash(value);
 		Node<V> node = root;
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < primeNums.length; i++) {
 			int mod = hash % primeNums[i];
 			if (node.getChildren()[mod] == null) {
-				return null;
+				return false;
 			} else if (node.getChildren()[mod].getValue() == null) {
 				node = node.getChildren()[mod];
 			} else if (node.getChildren()[mod].getValue().equals(value)) {
-				return value;
+				return true;
 			} else {
 				node = node.getChildren()[mod];
 			}
 		}
-		return null;
+		return false;
 	}
 
 	public V remove(V value) {
 		int hash = hash(value);
 		Node<V> node = root;
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < primeNums.length; i++) {
 			int mod = hash % primeNums[i];
 			if (node.getChildren()[mod] == null) {
 				return null;
