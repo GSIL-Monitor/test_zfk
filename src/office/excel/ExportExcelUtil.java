@@ -84,6 +84,7 @@ public class ExportExcelUtil {
 				Object obj = datas.get(i);
 				Class<? extends Object> clazz = obj.getClass();
 				String clazzName = clazz.getName();
+				//Map
 				if (clazzName.contains("java.util.") && clazzName.contains("Map")) {
 					for (int j = 0; j < propertyNames.length; j++) {
 						Map map = (Map) obj;
@@ -92,6 +93,7 @@ public class ExportExcelUtil {
 						cell.setCellValue(value);
 					}
 				} else {
+					//对象
 					for (int j = 0; j < propertyNames.length; j++) {
 						Field field = clazz.getDeclaredField(propertyNames[j]);
 						field.setAccessible(true);
