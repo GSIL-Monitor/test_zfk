@@ -1,6 +1,6 @@
 package quartz;
 
-import java.util.Locale;
+import java.util.Date;
 
 import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
@@ -13,6 +13,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.triggers.CronTriggerImpl;
 
 public class TestQ2 {
 
@@ -28,23 +29,25 @@ public class TestQ2 {
 			SchedulerFactory sf = new StdSchedulerFactory();
 			sched = sf.getScheduler();
 
-			// jobs可以在scheduled的sched.start()方法前被调用
-			// job 1将每隔20秒执行一次
+			//数据
 			JobDataMap newJobDataMap = new JobDataMap();
 			newJobDataMap.put("taskId", "11");
 			newJobDataMap.put("name", "zhufukunTask11");
+			// job可以在scheduled的sched.start()方法前被调用
 			JobDetail job = JobBuilder.newJob(MyJob.class).withIdentity("11")
 					.usingJobData(newJobDataMap).build();
+			//触发时间
+			String cronExpression = "0 0/1 * * * 11";
+			System.out.println(isValidExpression(cronExpression));
+			System.out.println(new CronExpression(cronExpression));
 			CronTrigger trigger = TriggerBuilder.newTrigger().withSchedule(
-					CronScheduleBuilder.cronSchedule("0 0/1 * * * ?")).build();
+					CronScheduleBuilder.cronSchedule(cronExpression)).build();
 			sched.scheduleJob(job, trigger);
 			sched.start();
 			System.out.println("sched start");
 
-			String cronExpression = "0 0/1 * * * ?";
-			System.out.println(new CronExpression(cronExpression));
-
-			Thread.sleep(1000 * 60 * 2);
+			Thread.sleep(1000 * 60);
+			//删除任务
 			sched.deleteJob(new JobKey("11"));
 			System.out.println("sched delete 11");
 
@@ -54,11 +57,26 @@ public class TestQ2 {
 			job = JobBuilder.newJob(MyJob.class).withIdentity("11")
 					.usingJobData(newJobDataMap).build();
 			trigger = TriggerBuilder.newTrigger().withSchedule(
-					CronScheduleBuilder.cronSchedule("0 0/1 * * * ?")).build();
+					CronScheduleBuilder.cronSchedule(cronExpression)).build();
 			sched.scheduleJob(job, trigger);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static boolean isValidExpression(final String cronExpression){
+        try {
+        	//new CronExpression(cronExpression)
+        	CronTriggerImpl trigger = new CronTriggerImpl();
+            trigger.setCronExpression(cronExpression);
+            Date date = trigger.computeFirstFireTime(null);
+            return date != null && date.after(new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+	
 }
