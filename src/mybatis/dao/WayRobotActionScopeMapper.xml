@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.workway.robot.core.dao.WayRobotActionScopeMapper">
+	<resultMap id="RobotActionScopeResultMap"
+		type="mybatis.entity.WayRobotActionScopeDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="use_type" property="useType" jdbcType="TINYINT" />
+		<result column="use_id" property="useId" jdbcType="VARCHAR" />
+		<result column="scope_type" property="scopeType" jdbcType="TINYINT" />
+		<result column="scope_id" property="scopeId" jdbcType="VARCHAR" />
+		<result column="subsystem_id" property="subsystemId" jdbcType="VARCHAR" />
+		<result column="modified_by" property="modifiedBy" jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modified_time" property="modifiedTime"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, use_type, use_id, scope_type, scope_id, subsystem_id,
+		modified_by,
+		create_time,
+		modified_time
+	</sql>
+	<select id="getByPrimaryKey" resultMap="RobotActionScopeResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from way_robot_action_scope
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		way_robot_action_scope
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="list" parameterType="mybatis.entity.WayRobotActionScopeDO"
+		resultMap="RobotActionScopeResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		way_robot_action_scope
+		<where>
+			<if test="useType != null">
+				use_type = #{useType,jdbcType=TINYINT}
+			</if>
+			<if test="useId != null">
+				AND use_id = #{useId,jdbcType=VARCHAR}
+			</if>
+			<if test="scopeType != null">
+				AND scope_type = #{scopeType,jdbcType=TINYINT}
+			</if>
+			<if test="scopeId != null">
+				AND scope_id = #{scopeId,jdbcType=VARCHAR}
+			</if>
+			<if test="subsystemId != null">
+				AND subsystem_id = #{subsystemId,jdbcType=VARCHAR}
+			</if>
+			<if test="modifiedBy != null">
+				AND modified_by = #{modifiedBy,jdbcType=BIGINT},
+			</if>
+		</where>
+		ORDER BY modified_time DESC
+	</select>
+
+	<insert id="insert" parameterType="mybatis.entity.WayRobotActionScopeDO">
+		insert into way_robot_action_scope
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="useType != null">
+				use_type,
+			</if>
+			<if test="useId != null">
+				use_id,
+			</if>
+			<if test="scopeType != null">
+				scope_type,
+			</if>
+			<if test="scopeId != null">
+				scope_id,
+			</if>
+			<if test="subsystemId != null">
+				subsystem_id,
+			</if>
+			<if test="modifiedBy != null">
+				modified_by,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifiedTime != null">
+				modified_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="useType != null">
+				#{useType,jdbcType=TINYINT},
+			</if>
+			<if test="useId != null">
+				#{useId,jdbcType=VARCHAR},
+			</if>
+			<if test="scopeType != null">
+				#{scopeType,jdbcType=TINYINT},
+			</if>
+			<if test="scopeId != null">
+				#{scopeId,jdbcType=VARCHAR},
+			</if>
+			<if test="subsystemId != null">
+				#{subsystemId,jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedBy != null">
+				#{modifiedBy,jdbcType=BIGINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifiedTime != null">
+				#{modifiedTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="mybatis.entity.WayRobotActionScopeDO">
+		update way_robot_action_scope
+		<set>
+			<if test="useType != null">
+				use_type = #{useType,jdbcType=TINYINT},
+			</if>
+			<if test="useId != null">
+				use_id = #{useId,jdbcType=VARCHAR},
+			</if>
+			<if test="scopeType != null">
+				scope_type = #{scopeType,jdbcType=TINYINT},
+			</if>
+			<if test="scopeId != null">
+				scope_id = #{scopeId,jdbcType=VARCHAR},
+			</if>
+			<if test="subsystemId != null">
+				subsystem_id = #{subsystemId,jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedBy != null">
+				modified_by = #{modifiedBy,jdbcType=BIGINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifiedTime != null">
+				modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into way_robot_action_scope(use_type, use_id, scope_type,
+		scope_id, subsystem_id,
+		modified_by,create_time,modified_time) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.useType},#{item.useId},#{item.scopeType},#{item.scopeId},
+			#{item.subsystemId},#{item.modifiedBy},#{item.createTime},#{item.modifiedTime}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="deleteByUseId" parameterType="java.lang.String">
+		delete from
+		way_robot_action_scope
+		where use_id = #{useId,jdbcType=VARCHAR}
+	</delete>
+
+	<resultMap id="ActionScopeMap"
+		type="com.workway.robot.base.dto.WayRobotActionScopeDTO">
+		<result column="type" property="scopeType" jdbcType="TINYINT" />
+		<result column="id" property="scopeId" jdbcType="VARCHAR" />
+		<result column="name" property="scopeName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="listActionScopes" resultMap="ActionScopeMap"
+		parameterType="java.util.Map">
+		select robot_id id,
+		nick_name NAME, 1 type
+		from way_robot_manage where
+		1=2
+		<if test='typeStr.contains("1")'>
+			UNION
+			select
+			robot_id id,
+			nick_name NAME,
+			1 type
+			FROM
+			way_robot_manage
+			where is_deleted = 0
+			<if test="subsystemId != null">
+				AND subsystem_id = #{subsystemId,jdbcType=VARCHAR}
+			</if>
+			<if test="modifiedBy != null">
+				AND modified_by = #{modifiedBy,jdbcType=BIGINT}
+			</if>
+		</if>
+		<if test='typeStr.contains("2")'>
+			UNION
+			select
+			robot_type_id id,
+			robot_type_name NAME,
+			2
+			type
+			FROM
+			way_robot_type
+			where is_deleted = 0
+			<if test="subsystemId != null">
+				AND subsystem_id = #{subsystemId,jdbcType=VARCHAR}
+			</if>
+			<if test="modifiedBy != null">
+				AND modified_by = #{modifiedBy,jdbcType=BIGINT}
+			</if>
+		</if>
+		<if test='typeStr.contains("3")'>
+			UNION
+			select
+			install_site_id id,
+			site_name NAME,
+			3 type
+			FROM
+			way_robot_install_site
+			where is_deleted = 0
+			<if test="subsystemId != null">
+				AND subsystem_id = #{subsystemId,jdbcType=VARCHAR}
+			</if>
+			<if test="modifiedBy != null">
+				AND modified_by = #{modifiedBy,jdbcType=BIGINT}
+			</if>
+		</if>
+	</select>
+
+
+</mapper>

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * <p>Description: 信息发布数据对象</p>
  *
- * @author evan
+ * @author zhufukun
  * @version 1.0.0
  * <p>Company:workway</p>
  * <p>Copyright:Copyright(c)2017</p>
@@ -26,11 +26,11 @@ public class WayMessagePublishDO implements Serializable{
     private String messageTitle;
 
     /** 开始时间 */
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
 
     /** 结束时间 */
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /** 发布状态(0：未发布，1：发布中，2：已过期) */

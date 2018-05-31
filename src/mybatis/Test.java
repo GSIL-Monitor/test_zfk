@@ -28,13 +28,16 @@ public class Test {
 		sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 		SqlSession session = sqlSessionFactory.openSession();
 		System.out.println(session);
-		//list();
-		// get();
-		//insert();
-		// update();
-		// delete();
-		List<Map> list = typeScoreGroupAvg();
-		System.out.println(list);
+		//###WayMessagePublishMapper
+		getByIdMap();
+		System.out.println("############");
+		listByPage();
+		System.out.println("############");
+		listByPageMap();
+		
+		//##BaseMapper
+//		List<Map> list = typeScoreGroupAvg();
+//		System.out.println(list);
 
 	}
 
@@ -104,14 +107,46 @@ public class Test {
 		
 	}
 
-	private static void get() throws JsonProcessingException {
+	private static void getById() throws JsonProcessingException {
 		SqlSession session = sqlSessionFactory.openSession();
-		WayMessagePublishDO message = session.selectOne("mybatis.dao.WayMessagePublishMapper.getById", 1L);
+		WayMessagePublishDO message = session.selectOne("mybatis.dao.WayMessagePublishMapper.getById", 1126L);
+		System.out.println(message);
+		session.close();
+	}
+	
+	private static void getByIdMap() throws JsonProcessingException {
+		SqlSession session = sqlSessionFactory.openSession();
+		Map<String,Object> message = session.selectOne("mybatis.dao.WayMessagePublishMapper.getByIdMap", 1126L);
 		System.out.println(message);
 		session.close();
 	}
 
-	private static void list() throws JsonProcessingException {
+	private static void listByPage() throws JsonProcessingException {
+		SqlSession session = sqlSessionFactory.openSession();
+
+		PageSearchDTO dto = new PageSearchDTO();
+		dto.setOffset(0);
+		dto.setLimit(10);
+		dto.setKey("aa");
+		// dto.setSearchContents(map);
+
+		List<WayMessagePublishDO> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listByPage", dto);
+		for (WayMessagePublishDO d : list) {
+			System.out.println(d.getMessageTitle());
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// //User类转JSON//
+		// //User类转JSON//
+		String json = mapper.writeValueAsString(list);
+		System.out.println(json);
+
+		session.close();
+
+	}
+	
+	private static void listByPageMap() throws JsonProcessingException {
 		SqlSession session = sqlSessionFactory.openSession();
 		//Map<String, Object> map = new HashMap<String, Object>();
 		// map.put("offset", 0);
@@ -119,15 +154,15 @@ public class Test {
 		// map.put("key", null);
 		// map.put("messageTitle", "小龙");
 
-		PageSearchDTO dto = new PageSearchDTO();
-		dto.setOffset(0);
-		dto.setLimit(10);
-		dto.setKey("小龙");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("offset", 0);
+		map.put("limit", 10);
+		map.put("key","aa");
 		// dto.setSearchContents(map);
 
-		List<WayMessagePublishDO> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listByPage", dto);
-		for (WayMessagePublishDO d : list) {
-			System.out.println(d.getMessageTitle());
+		List<Map<String,Object>> list = session.selectList("mybatis.dao.WayMessagePublishMapper.listByPageMap", map);
+		for (Map<String,Object> m : list) {
+			System.out.println(m.get("messageTitle"));
 		}
 
 		System.out.println("###############");

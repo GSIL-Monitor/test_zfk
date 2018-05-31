@@ -19,6 +19,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import office.excel.ExportExcelUtil;
 
+/**
+ * 更新现有的关系，在way_gkb_flow表中第一列加入main_id，他将作为后续新的flow_id，
+ * 根据main_id生成新的group_id，替换原来的group_id
+ * 
+ * 中间表也是根据mainI_id生成新的flow_id与parent_flow_id
+ */
 public class HmFlow {
 	public static void main(String[] args) {
 		String flowfile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow.xls";
@@ -66,12 +72,13 @@ public class HmFlow {
 		// 正文内容应该从第二行开始,第一行为表头的标题
 		for (int i = 1; i <= rowNum; i++) {
 			row = sheet.getRow(i);
-			mainIdList.add(getCellStringValue(row.getCell(0)));
-			flowIdList.add(getCellStringValue(row.getCell(1)));
-			groupIdList.add(getCellStringValue(row.getCell(12)));
+			mainIdList.add(getCellStringValue(row.getCell(0)));//自己手动加，讲作为新的flowId
+			flowIdList.add(getCellStringValue(row.getCell(1)));//flowId
+			groupIdList.add(getCellStringValue(row.getCell(12)));//groupId
 
 		}
 
+		//根据main_id生成新的group_id，替换原来的group_id
 		for (int i = 0; i < groupIdList.size(); i++) {
 			for (int j = 0; j < flowIdList.size(); j++) {
 				if (groupIdList.get(i).equals(flowIdList.get(j))) {
@@ -83,10 +90,11 @@ public class HmFlow {
 			}
 		}
 
-		// 导出
+		// 导出，
 		ExportExcelUtil.exportOneSheet("sheet", new String[] { "groupId" }, new String[] { "groupId" }, newGroupIdDatas,
 				"C:\\Users\\zhufukun\\Desktop\\newgroupid.xls");
 
+		//分析中间表
 		flowmiddle(flowmiddlefile, mainIdList, flowIdList);
 
 	}
@@ -96,6 +104,7 @@ public class HmFlow {
 		Sheet sheet;
 		Row row;
 
+		//中间表数据文件
 		String ext = flowmiddlefile.substring(flowmiddlefile.lastIndexOf("."));
 		try {
 			InputStream is = new FileInputStream(flowmiddlefile);
@@ -138,15 +147,18 @@ public class HmFlow {
 
 		}
 
+		
 		for (int i = 0; i < idList.size(); i++) {
 			Map<String, String> rowValues = new HashMap<String, String>();
 			boolean f1 = false;
 			boolean f2 = false;
 			for (int j = 0; j < flowIdList.size(); j++) {
+				//这里的idList与主表的flowId比较
 				if (idList.get(i).equals(flowIdList.get(j))) {
 					rowValues.put("id", mainIdList.get(j));
 					f1 = true;
 				}
+				//这里的pidList与主表的flowId比较
 				if (pidList.get(i).equals(flowIdList.get(j))) {
 					rowValues.put("pid", mainIdList.get(j));
 					f2 = true;
