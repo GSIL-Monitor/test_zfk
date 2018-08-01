@@ -18,4 +18,12 @@ public interface BaseMapper {
 	 * @return
 	 */
 	List<Map> typeScoreGroupAvg(Map map);
+	
+	
+	/**
+	 * 查询作用域
+	 * @param map
+	 * @return
+	 */
+	List<Map> findActionScope(Map map);
 }

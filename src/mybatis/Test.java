@@ -3,6 +3,7 @@ package mybatis;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,11 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mybatis.dto.PageSearchDTO;
@@ -29,16 +33,79 @@ public class Test {
 		SqlSession session = sqlSessionFactory.openSession();
 		System.out.println(session);
 		//###WayMessagePublishMapper
-		getByIdMap();
-		System.out.println("############");
-		listByPage();
-		System.out.println("############");
-		listByPageMap();
+//		getByIdMap();
+//		System.out.println("############");
+//		listByPage();
+//		System.out.println("############");
+//		listByPageMap();
 		
 		//##BaseMapper
 //		List<Map> list = typeScoreGroupAvg();
 //		System.out.println(list);
+		
+		findActionScope();
 
+	}
+
+	private static void findActionScope() throws IOException {
+		SqlSession session = sqlSessionFactory.openSession();
+		Map map = new HashMap();
+		//map.put("subsystemId", "subsystemId");
+		List<Map<String, Object>> datas = session.selectList("mybatis.dao.BaseMapper.findActionScope", map);
+		if(datas.size() == 0){
+			System.out.println("##########无数据");
+			return;
+		}
+		
+		Map<String, Map<String,List<String>>> resultMap = new HashMap<String, Map<String,List<String>>>();
+		for(Map<String, Object> data : datas){
+			//数据
+			String subsystemId = data.get("subsystemId").toString();
+			String useId = data.get("useId").toString();
+			List<String> robotIds = (List<String>) data.get("robotIds");
+			//外面键
+			String key = "actionScope:"+subsystemId;
+			
+			if(resultMap.containsKey(key)){
+				//包含
+				Map<String,List<String>> value = resultMap.get(key);
+				value.put(useId, robotIds);
+			}else{
+				//没有包含
+				HashMap<String, List<String>> value = new HashMap<String,List<String>>();
+				value.put(useId, robotIds);
+				resultMap.put(key, value);
+			}
+		}
+		System.out.println("All-Map==="+resultMap);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonStr = mapper.writeValueAsString(resultMap);
+		System.out.println("All-jsonStr==="+jsonStr);
+		
+		
+		//单引号处理
+		mapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+
+	    //1
+		resultMap = (Map<String, Map<String, List<String>>>) mapper.readValue(jsonStr, Map.class);
+		System.out.println("All-Map==="+resultMap);
+		
+		//更新
+		HashMap<String, List<String>> valueMap = (HashMap<String, List<String>>) resultMap.get("actionScope:8771a68be48911e792d400505687a0a9");
+		jsonStr = mapper.writeValueAsString(valueMap);
+		System.out.println("Sub-jsonStr==="+jsonStr);
+		
+		//2
+		HashMap<String, List<String>> value = (HashMap<String, List<String>>) mapper.readValue(jsonStr, Map.class);
+		//HashMap<String, List<String>> value = mapper.readValue(jsonStr, new TypeReference<HashMap<String, List<String>>>() {});
+		List<String> newRobotIds = new ArrayList<String>();
+		newRobotIds.add("################");
+		value.put("ea83e46f3d6711e8884400505687a0a9", newRobotIds);
+		System.out.println("Sub-Map==="+value);
+		value.remove("ea83e46f3d6711e8884400505687a0a9@@");
+		System.out.println("Sub-Map==="+value);
+		
 	}
 
 	private static List<Map> typeScoreGroupAvg() {

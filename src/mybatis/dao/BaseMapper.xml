@@ -62,6 +62,41 @@
 		) T GROUP BY T.gkb_type, T.date
 	</select>
 
+	<!-- 作用机器人 -->
+	<resultMap type="java.lang.String" id="robotIds"> 
+      <result column="robot_id" property="robotId" /> 
+    </resultMap> 
+	
+	<resultMap id="ResultMap" type="java.util.Map">
+		<result column="subsystem_id" property="subsystemId" jdbcType="VARCHAR" />
+		<result column="use_id" property="useId" jdbcType="VARCHAR" />
+		<collection property="robotIds" javaType="java.util.List"
+			ofType="java.lang.String">
+			<result column="robot_id" property="robotId" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
 
+	<select id="findActionScope" parameterType="java.util.Map"
+		resultMap="ResultMap">
+		SELECT DISTINCT T.subsystem_id, T.use_id, T.robot_id from
+		(SELECT T1.subsystem_id, T1.use_id, T1.scope_id robot_id
+		FROM way_robot_action_scope T1 
+		JOIN way_robot_manage TR ON TR.robot_id = T1.scope_id
+		WHERE T1.scope_type = 1 AND TR.is_deleted = 0
+		UNION ALL
+		SELECT T2.subsystem_id, T2.use_id, TR.robot_id
+		FROM way_robot_action_scope T2
+		JOIN way_robot_manage TR ON TR.robot_type_id = T2.scope_id
+		WHERE T2.scope_type = 2 AND TR.is_deleted = 0
+		UNION ALL
+		SELECT T3.subsystem_id, T3.use_id, TR.robot_id
+		FROM way_robot_action_scope T3
+		JOIN way_robot_manage TR ON TR.install_site_id = T3.scope_id
+		WHERE T3.scope_type = 3 AND TR.is_deleted = 0) T WHERE 1=1
+		<if test="subsystemId != null">
+			AND subsystem_id = #{subsystemId,jdbcType=VARCHAR}
+		</if>
+		ORDER BY T.subsystem_id, T.use_id
+	</select>
 
 </mapper>

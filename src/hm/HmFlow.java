@@ -23,12 +23,12 @@ import office.excel.ExportExcelUtil;
  * 更新现有的关系，在way_gkb_flow表中第一列加入main_id，他将作为后续新的flow_id，
  * 根据main_id生成新的group_id，替换原来的group_id
  * 
- * 中间表也是根据mainI_id生成新的flow_id与parent_flow_id
+ * 中间表也是根据main_id生成新的flow_id与parent_flow_id
  */
 public class HmFlow {
 	public static void main(String[] args) {
-		String flowfile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow.xls";
-		String flowmiddlefile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow_middle.xls";
+		String flowfile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow.xlsx";
+		String flowmiddlefile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow_middle.xlsx";
 
 		Workbook wb = null;
 		Sheet sheet;
