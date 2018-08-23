@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<books>
+	<!-- 我看的第一本武侠书 -->
+	<book id='10'>
+		<name>天龙八部</name>
+		<price>56</price>
+		<author>金庸</author>
+		<desc>一本经典武侠，小说.其中&quot;乔峰&quot;为主要任务.
+			比&lt;倚天屠龙记&gt;好看
+		</desc>
+	</book>
+	<!-- 
+	  我的第一本生活书
+	 -->
+	<book id="2">
+		<name>红高粱</name>
+		<price>20</price>
+		<author>莫言</author>
+		<desc>一个描述农村情感题材的，
+		被张艺谋排成电影.
+		<![CDATA[
+		 <,>,',","',&,<a>
+		]]>
+		</desc>
+	</book>
+</books>

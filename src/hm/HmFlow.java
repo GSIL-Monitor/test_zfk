@@ -80,13 +80,18 @@ public class HmFlow {
 
 		//根据main_id生成新的group_id，替换原来的group_id
 		for (int i = 0; i < groupIdList.size(); i++) {
+			boolean isfind = false;
 			for (int j = 0; j < flowIdList.size(); j++) {
 				if (groupIdList.get(i).equals(flowIdList.get(j))) {
 					Map<String, String> rowValues = new HashMap<String, String>();
 					rowValues.put("groupId", mainIdList.get(j));
 					newGroupIdDatas.add(rowValues);
+					isfind = true;
 					break;
 				}
+			}
+			if(!isfind){
+				System.out.println("groupId没有找到对应flow_id，group_id==="+groupIdList.get(i));
 			}
 		}
 
