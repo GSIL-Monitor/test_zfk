@@ -72,6 +72,13 @@
 	<classpathentry kind="lib" path="lib/office/jacob.jar"/>
 	<classpathentry kind="lib" path="lib/hadoop/common/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="lib" path="lib/hadoop/common/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-examples-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-excelant-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/poi-scratchpad-3.17.jar"/>
+	<classpathentry kind="lib" path="lib/office/commons-collections4-4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

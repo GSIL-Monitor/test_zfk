@@ -17,8 +17,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import office.excel.ExportExcelUtil;
-
 /**
  * 更新现有的关系，在way_gkb_flow表中第一列加入main_id，他将作为后续新的flow_id，
  * 根据main_id生成新的group_id，替换原来的group_id
@@ -27,8 +25,8 @@ import office.excel.ExportExcelUtil;
  */
 public class HmFlow {
 	public static void main(String[] args) {
-		String flowfile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow.xlsx";
-		String flowmiddlefile = "C:\\Users\\zhufukun\\Desktop\\way_gkb_flow_middle.xlsx";
+		String flowfile = "D:\\way_gkb_flow.xlsx";
+		String flowmiddlefile = "D:\\way_gkb_flow_middle.xlsx";
 
 		Workbook wb = null;
 		Sheet sheet;
@@ -97,7 +95,7 @@ public class HmFlow {
 
 		// 导出，
 		ExportExcelUtil.exportOneSheet("sheet", new String[] { "groupId" }, new String[] { "groupId" }, newGroupIdDatas,
-				"C:\\Users\\zhufukun\\Desktop\\newgroupid.xls");
+				"D:\\newgroupid.xls");
 
 		//分析中间表
 		flowmiddle(flowmiddlefile, mainIdList, flowIdList);
@@ -178,7 +176,7 @@ public class HmFlow {
 
 		// 导出
 		ExportExcelUtil.exportOneSheet("sheet", new String[] { "id", "pid" }, new String[] { "id", "pid" }, newDates,
-				"C:\\Users\\zhufukun\\Desktop\\newmiddleid.xls");
+				"D:\\newmiddleid.xls");
 
 	}
 
