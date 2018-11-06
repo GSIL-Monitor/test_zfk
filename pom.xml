@@ -191,6 +191,32 @@
 			<version>3.17</version>
 		</dependency>
 		<!-- poi end -->
+		
+		<!-- 报表相关JAR包begin -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.myaspose</groupId> -->
+<!-- 			<artifactId>aspose-pdf</artifactId> -->
+<!-- 			<version>17.2.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.myaspose</groupId> -->
+<!-- 			<artifactId>cells</artifactId> -->
+<!-- 			<version>18.8</version> -->
+<!-- 		</dependency> -->
+		<!-- 报表相关JAR包end -->
+
+		<!-- mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
 
 		<!-- itextpdf -->
 		<dependency>
@@ -216,13 +242,6 @@
 			<version>1.11.2</version>
 		</dependency>
 
-		<!-- mail -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4</version>
-		</dependency>
-		
 		<!-- 百度AI -->
 		<dependency>
 			<groupId>com.baidu.aip</groupId>
