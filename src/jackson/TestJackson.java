@@ -11,7 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JacksonDemo {
+public class TestJackson {
 	public static void main(String[] args) throws ParseException, IOException {
 		User user = new User();
 		user.setName("小龙");
@@ -51,6 +51,8 @@ public class JacksonDemo {
 		// User类转JSON
 		String json = mapper.writeValueAsString(user);
 		System.out.println(json);
+		
+		
 
 		// Java集合转JSON
 		String jsonlist = mapper.writeValueAsString(users);

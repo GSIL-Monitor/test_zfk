@@ -6,9 +6,18 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+//@JsonIgnoreProperties({ "SUCCESS", "FAIL" })
+//@JsonInclude(JsonInclude.Include.ALWAYS)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
+	
+    private final String SUCCESS="1";
+
+    private final String FAIL="0";
+	
 	private String name;
 	private Integer age;
 	// @JsonSerialize(using = JsonDateFormatFull.class)
