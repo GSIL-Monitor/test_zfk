@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,6 +21,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * HttpClient工具
@@ -31,7 +31,7 @@ import org.apache.http.util.EntityUtils;
  * 
  */
 public class HttpClientUtil {
-	private final static Log log = LogFactory.getLog(HttpClientUtil.class);
+	private final static Logger log = LoggerFactory.getLogger(HttpClientUtil.class);
 
 	private static HttpClientUtil instance = null;
 
